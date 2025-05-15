@@ -1,3 +1,6 @@
+# start with MySQL, then Node.js, and lastly React
+# ports: MySQL -> 3306, Node.js -> 5000, React -> 3000
+
 version: '3.8'
 
 services:
@@ -19,3 +22,12 @@ services:
       MYSQL_ROOT_PASSWORD: rootpass
     depends_on:
       - db
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
