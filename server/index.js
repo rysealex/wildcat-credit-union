@@ -26,6 +26,15 @@ db.connect(err => {
 	}
 });
 
+// make db connection available to all models
+module.exports.db = db;
+// import and use routes
+const userRoutes = require('./routes/user');
+const bankAccountRoutes = require('./routes/bank_account');
+// use the routes
+app.use('/api', userRoutes);
+app.use('/api', bankAccountRoutes);
+
 // handle the request at localhost port 5000
 app.get('/', (req, res) => {
   res.send('WCU API is running!');

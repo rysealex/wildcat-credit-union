@@ -1,0 +1,28 @@
+const express = require('express');
+const router = express.Router();
+const bankAccountModel = require('../models/bank_account'); // import user model
+
+// GET /api/bank_accounts - get all bank accounts
+router.get('/bank_accounts', (req, res) => {
+	bankAccountModel.getAllBankAccounts()
+		.then(accounts => res.json(accounts))
+		.catch(error => res.status(500).json({ error: 'Failed to fetch bank accounts' }));
+});
+
+// GET /api/bank_accounts/:ssn - get bank account balance by ssn
+router.get('/bank_accounts/:ssn', async (req, res) => {
+	const { ssn } = req.params;
+	try {
+		const account = await bankAccountModel.getBankAccountBalanceBySSN(ssn);
+		// check if account exists
+		if (account && account.length > 0) {
+			res.json(account[0]);
+		} else {
+			res.status(404).json({ error: 'Bank account not found' });
+		}
+	} catch (error) {
+		res.status(500).json({ error: `Failed to retrieve bank account balance for SSN ${ssn}` });
+	}
+});
+
+module.exports = router;
