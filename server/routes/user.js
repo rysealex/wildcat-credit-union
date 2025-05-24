@@ -9,4 +9,12 @@ router.get('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to fetch users' }));
 });
 
+// POST /api/users - add a new user
+router.post('/users', (req, res) => {
+    const userData = req.body; // get user data from request body
+    userModel.addUser(userData)
+        .then(newUser => res.status(201).json(newUser))
+        .catch(error => res.status(500).json({ error: 'Failed to add user' }));
+});
+
 module.exports = router;

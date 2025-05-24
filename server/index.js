@@ -31,9 +31,11 @@ module.exports.db = db;
 // import and use routes
 const userRoutes = require('./routes/user');
 const bankAccountRoutes = require('./routes/bank_account');
+const registrationRoutes = require('./routes/registration');
 // use the routes
 app.use('/api', userRoutes);
 app.use('/api', bankAccountRoutes);
+app.use('/api', registrationRoutes);
 
 // handle the request at localhost port 5000
 app.get('/', (req, res) => {

@@ -21,6 +21,27 @@ const bankAccountModel = {
 			console.error('Error fetching bank account by ssn:', error);
 			throw error;
 		}
+	},
+	// function to add a new bank account
+	addBankAccount: async (accountData) => {
+		try {
+			const { ssn, balance } = accountData;
+			// construct the SQL query to insert a new bank account
+			const accountToInsert = {
+				ssn: ssn,
+				balance: 500.00 // default balance set to 500.00
+			};
+			// execute the query
+			const [result] = await db.promise().query('INSERT INTO bank_account SET ?', accountToInsert);
+			// return the inserted bank account
+			return {
+				id: result.insertId,
+				...accountToInsert
+			};
+		} catch (error) {
+			console.error('Error adding bank account:', error);
+			throw error;
+		}
 	}
 };
 

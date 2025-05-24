@@ -25,4 +25,12 @@ router.get('/bank_accounts/:ssn', async (req, res) => {
 	}
 });
 
+// POST /api/bank_accounts - add a new bank account
+router.post('/bank_accounts', (req, res) => {
+	const accountData = req.body; // get account data from request body
+	bankAccountModel.addBankAccount(accountData)
+		.then(newAccount => res.status(201).json(newAccount))
+		.catch(error => res.status(500).json({ error: 'Failed to add bank account' }));
+});
+
 module.exports = router;

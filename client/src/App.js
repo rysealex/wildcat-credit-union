@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import UserAuthentication from "./components/user_authentication";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
     <div>
       <h1>WCU Frontend</h1>
       <p>{message}</p>
+      <UserAuthentication />
     </div>
   )
 }
