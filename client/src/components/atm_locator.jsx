@@ -13,11 +13,11 @@ const AtmLocator = () => {
 
 	return (
 		<div style={{ height: '500px', width: '100%' }}>
-			<APIProvider apiKey="AIzaSyCMT1qgGGU593rZLwtJtPDEMYOoYmib82Q">
-				<Map 
+			<APIProvider apiKey={process.env.REACT_APP_Maps_API_KEY}>
+				<Map
 					defaultCenter={position}
 					defaultZoom={15}
-					mapId='fd06dc25e21bc77e58abb98f'
+					mapId={process.env.REACT_APP_Maps_MAP_ID}
 				>
 					{atmMarkers.map(marker => (
 						<AdvancedMarker
