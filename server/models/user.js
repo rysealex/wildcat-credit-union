@@ -1,10 +1,10 @@
-const { db } = require('../index'); // import db connection from index.js
+const pool = require('../index'); // import pool connection from index.js
 
 const userModel = {
 	// function to get all users
 	getAllUsers: async () => {
 		try {
-			const [rows, fields] = await db.promise().query('SELECT * FROM user');
+			const [rows, fields] = await pool.query('SELECT * FROM user');
 			return rows;
 		} catch (error) {
 			console.error('Error fetching users:', error);
@@ -26,7 +26,7 @@ const userModel = {
 				account_number: account_number
 			};
 			// execute the query
-			const [result] = await db.promise().query('INSERT INTO user SET ?', userToInsert);
+			const [result] = await pool.query('INSERT INTO user SET ?', userToInsert);
 			// return the inserted user
 			return {
 				id: result.insertId,

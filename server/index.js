@@ -1,7 +1,7 @@
 // requirements for backend service
 require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise'); // promise-based MySQL client
 const app = express(); // express application
 const cors = require('cors'); // frontend communication
 const PORT = process.env.PORT || 5000; // in case env not setup
@@ -9,25 +9,38 @@ const PORT = process.env.PORT || 5000; // in case env not setup
 app.use(cors());
 app.use(express.json());
 
-// connection to MySQL database
-const db = mysql.createConnection({
+// create a MySQL connection pool
+const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-  port: 3306
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-db.connect(err => {
-	if (err) {
-		console.log('Database connection failed', err);
-	} else {
-		console.log('Connected to MySQL Database');
-	}
-});
+// function to connect to the database with retry logic
+const connectWithRetry = () => {
+  pool.getConnection()
+    .then(connection => {
+      console.log('Database connected successfully');
+      connection.release(); // release the connection back to the pool
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    })
+    .catch(err => {
+      console.error('Database connection failed, retrying in 5 seconds...', err.message);
+      setTimeout(connectWithRetry, 5000); // retry after 5 seconds
+    });
+};
 
-// make db connection available to all models
-module.exports.db = db;
+// initiate the connection attempt
+connectWithRetry();
+
+module.exports = pool; // export the pool for use in routes
+
 // import and use routes
 const userRoutes = require('./routes/user');
 const bankAccountRoutes = require('./routes/bank_account');
@@ -40,8 +53,4 @@ app.use('/api', registrationRoutes);
 // handle the request at localhost port 5000
 app.get('/', (req, res) => {
   res.send('WCU API is running!');
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
 });

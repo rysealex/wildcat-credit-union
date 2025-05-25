@@ -2,4 +2,4 @@ run:
 	docker compose up --build
 
 clean:
-	docker compose down --volumes
+	docker-compose down

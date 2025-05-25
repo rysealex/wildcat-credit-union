@@ -1,11 +1,9 @@
 # start with MySQL, then Node.js, and lastly React
 # ports: MySQL -> 3307, Node.js -> 5000, React -> 3000
 
-version: '3.8'
-
 services:
   db:
-    image: mysql:8
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
@@ -26,7 +24,11 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DATABASE: wcu_db
+      PORT: 5000
     depends_on:
       db:
         condition: service_healthy

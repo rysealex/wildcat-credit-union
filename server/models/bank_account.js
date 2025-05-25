@@ -1,11 +1,10 @@
-const { db } = require('../index'); // import db connection from index.js
-const { get } = require('../routes/user');
+const pool = require('../index'); // import pool connection from index.js
 
 const bankAccountModel = {
 	// function to get all bank accounts
 	getAllBankAccounts: async () => {
 		try {
-			const [rows, fields] = await db.promise().query('SELECT * FROM bank_account');
+			const [rows, fields] = await pool.query('SELECT * FROM bank_account');
 			return rows;
 		} catch (error) {
 			console.error('Error fetching bank accounts:', error);
@@ -15,7 +14,7 @@ const bankAccountModel = {
 	// function to get bank account balance by ssn
 	getBankAccountBalanceBySSN: async (ssn) => {
 		try {
-			const [rows, fields] = await db.promise().query('SELECT balance FROM bank_account WHERE ssn = ?', [ssn]);
+			const [rows, fields] = await pool.query('SELECT balance FROM bank_account WHERE ssn = ?', [ssn]);
 			return rows;
 		} catch (error) {
 			console.error('Error fetching bank account by ssn:', error);
@@ -32,7 +31,7 @@ const bankAccountModel = {
 				balance: 500.00 // default balance set to 500.00
 			};
 			// execute the query
-			const [result] = await db.promise().query('INSERT INTO bank_account SET ?', accountToInsert);
+			const [result] = await pool.query('INSERT INTO bank_account SET ?', accountToInsert);
 			// return the inserted bank account
 			return {
 				id: result.insertId,
