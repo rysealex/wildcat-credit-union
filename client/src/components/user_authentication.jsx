@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // this component handles user authentication
 const UserAuthentication = () => {
+
+	// use navigate hook to programmatically navigate to other routes
+	const navigate = useNavigate();	
+	// function to handle navigation to different routes
+	const handleNavigation = (url) => {
+		navigate(url);
+	};
 
 	// state variables for user authentication
 	const [fname, setFname] = useState('');
@@ -78,7 +86,7 @@ const UserAuthentication = () => {
 				<label>Account Number:</label>
 				<input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required />
 			</div>
-			<button type="submit">Submit</button>
+			<button type="submit" onClick={() => handleNavigation('/display_account_info')}>Submit</button>
 		</form>
 	)
 };

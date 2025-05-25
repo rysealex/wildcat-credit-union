@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import UserAuthentication from "./components/user_authentication";
+import DisplayAccountInfo from "./components/display_account_info";
+import AtmLocator from "./components/atm_locator";
 
 function App() {
 
@@ -15,11 +18,17 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>WCU Frontend</h1>
-      <p>{message}</p>
-      <UserAuthentication />
-    </div>
+    <Router>
+      <div>
+        <h1>WCU Frontend</h1>
+        <p>{message}</p>
+      </div>
+      <Routes>
+        <Route path="/" element={<UserAuthentication />} />
+        <Route path="/display_account_info" element={<DisplayAccountInfo />} />
+        <Route path="/atm_locator" element={<AtmLocator />} />
+      </Routes>
+    </Router>
   )
 }
 
