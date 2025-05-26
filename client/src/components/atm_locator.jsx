@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
+import '../styles/atm_locator.css';
+import { InfoWindow } from '@vis.gl/react-google-maps';
 
 const AtmLocator = () => {
-	// set position to CWU Ellensburg, WA
-	const position = { lat: 47.0073, lng: -120.5363 };
+
+	// user position state to store user's geolocation
+	const [userPosition, setUserPosition] = useState(null);
+	// geolocation error state to handle errors in fetching user's position
+	const [geolocationError, setGeolocationError] = useState(null);
+
+	// state to manage the currently selected ATM marker
+	const [selectedAtm, setSelectedAtm] = useState(null);
+
+	// set map position to CWU Ellensburg, WA
+	const mapPosition = { lat: 47.0073, lng: -120.5363 };
 	// initialize atm markers to be displayed on the map
 	const atmMarkers = [
 		{ id: 1, position: { lat: 47.0030, lng: -120.5378 } },
@@ -11,21 +22,82 @@ const AtmLocator = () => {
 		{ id: 3, position: { lat: 47.0073, lng: -120.5363 } },
 	];
 
+	// useEffect to fetch user's geolocation
+	useEffect(() => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					setUserPosition({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					});
+				},
+				(error) => {
+					setGeolocationError(error.message);
+				},
+				{ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+			);
+		} else {
+			setGeolocationError('Geolocation is not supported by this browser.');
+		}
+	}, []);
+
+	// handle the atm marker click event
+	const handleAtmMarkerClick = (atmId) => {
+		setSelectedAtm(atmId);
+	};
+
+	// handle the atm marker close event
+	const handleAtmMarkerClose = () => {
+		setSelectedAtm(null);
+	};
+
+	// find the currently selected ATM marker
+	const selectedAtmMarker = atmMarkers.find(marker => marker.id === selectedAtm);
+
 	return (
 		<div style={{ height: '500px', width: '100%' }}>
+			{geolocationError && (
+				<div style={{ color: 'red' }}>
+					Error fetching geolocation: {geolocationError}
+				</div>
+			)}
 			<APIProvider apiKey={process.env.REACT_APP_Maps_API_KEY}>
 				<Map
-					defaultCenter={position}
+					defaultCenter={userPosition || mapPosition}
 					defaultZoom={15}
 					mapId={process.env.REACT_APP_Maps_MAP_ID}
 				>
+					{userPosition && (
+						<AdvancedMarker
+							position={userPosition}
+							title="Your Current Location"
+						>
+							<div className="user-location-dot" />
+						</AdvancedMarker>
+					)}
+
 					{atmMarkers.map(marker => (
 						<AdvancedMarker
 							key={marker.id}
 							position={marker.position}
 							title={`ATM ${marker.id}`}
+							onClick={() => handleAtmMarkerClick(marker.id)}
 						/>
 					))}
+
+					{selectedAtmMarker && (
+						<InfoWindow
+							position={selectedAtmMarker.position}
+							onCloseClick={handleAtmMarkerClose}
+							pixelOffset={{ width: 0, height: -30 }}
+						>
+							<div className="atm-info-window">
+								<h3>ATM {selectedAtmMarker.id}</h3>
+								<p>Location: {selectedAtmMarker.position.lat.toFixed(4)}, {selectedAtmMarker.position.lng.toFixed(4)}</p>
+							</div>
+						</InfoWindow>
+					)}
 				</Map>
 			</APIProvider>
 		</div>
