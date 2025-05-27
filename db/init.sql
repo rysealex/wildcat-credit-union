@@ -48,11 +48,13 @@ ENGINE = InnoDB;
 -- Table `wcu_db`.`transaction_history`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `wcu_db`.`transaction_history` (
+  `transaction_id` INT NOT NULL AUTO_INCREMENT,
   `ssn` CHAR(9) NOT NULL,
   `date` DATE NOT NULL,
-  `transaction_type` INT NOT NULL,
+  `transaction_type` ENUM('deposit', 'withdrawal', 'transfer') NOT NULL,
   `transaction_amount` FLOAT NOT NULL,
-  PRIMARY KEY (`ssn`),
+  PRIMARY KEY (`transaction_id`),
+  INDEX `fk_transaction_history_bank_account_idx` (`ssn` ASC) VISIBLE,
   CONSTRAINT `transaction_history_fk_bank_account`
     FOREIGN KEY (`ssn`)
     REFERENCES `wcu_db`.`bank_account` (`ssn`)
@@ -61,12 +63,12 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`transaction_history` (
 ENGINE = InnoDB;
 
 INSERT INTO bank_account VALUES
-	('112233445', '1000.00'),
+  ('112233445', '1000.00'),
     ('123456789', '500.00')
 ;
 
 INSERT INTO user VALUES
-	('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123password', '9876543210', '123456789abc'),
+  ('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123password', '9876543210', '123456789abc'),
     ('John', 'Smith', 'john@gmail.com', '123456789', 'password123', '0123456789', 'abc123456789')
 ;
 
