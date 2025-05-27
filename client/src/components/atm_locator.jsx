@@ -2,6 +2,8 @@ import React, { useState, useEffect, use } from 'react';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 import '../styles/atm_locator.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons';
 
 const AtmLocator = () => {
 
@@ -17,9 +19,10 @@ const AtmLocator = () => {
 	const mapPosition = { lat: 47.0073, lng: -120.5363 };
 	// initialize atm markers to be displayed on the map
 	const atmMarkers = [
-		{ id: 1, position: { lat: 47.0030, lng: -120.5378 } },
-		{ id: 2, position: { lat: 47.0051, lng: -120.5414 } },
-		{ id: 3, position: { lat: 47.0073, lng: -120.5363 } },
+		{ id: 1, position: { lat: 47.0030, lng: -120.5378 }, name: 'ATM 1' },
+		{ id: 2, position: { lat: 47.0051, lng: -120.5414 }, name: 'ATM 2' },
+		{ id: 3, position: { lat: 47.0073, lng: -120.5363 }, name: 'ATM 3' },
+		{ id: 4, position: { lat: 47.0012, lng: -120.5402 }, name: 'ATM 4' },
 	];
 
 	// useEffect to fetch user's geolocation
@@ -55,6 +58,11 @@ const AtmLocator = () => {
 	// find the currently selected ATM marker
 	const selectedAtmMarker = atmMarkers.find(marker => marker.id === selectedAtm);
 
+	// adjust the position of the info window to avoid overlap with the marker
+	const adjustedPosition = selectedAtmMarker
+  ? { ...selectedAtmMarker.position, lat: selectedAtmMarker.position.lat + 0.0003 }
+  : null;
+
 	return (
 		<div style={{ height: '500px', width: '100%' }}>
 			{geolocationError && (
@@ -81,20 +89,24 @@ const AtmLocator = () => {
 						<AdvancedMarker
 							key={marker.id}
 							position={marker.position}
-							title={`ATM ${marker.id}`}
+							title={`${marker.name}`}
 							onClick={() => handleAtmMarkerClick(marker.id)}
-						/>
+						>
+							<FontAwesomeIcon icon={faMoneyBillTransfer} className="atm-marker-icon" />
+						</AdvancedMarker>
 					))}
 
 					{selectedAtmMarker && (
 						<InfoWindow
-							position={selectedAtmMarker.position}
+							position={adjustedPosition}
 							onCloseClick={handleAtmMarkerClose}
-							pixelOffset={{ width: 0, height: -30 }}
 						>
 							<div className="atm-info-window">
-								<h3>ATM {selectedAtmMarker.id}</h3>
+								<div className='atm-info-header'>
+									<h3 className="atm-info-title">{selectedAtmMarker.name}</h3>
+								</div>
 								<p>Location: {selectedAtmMarker.position.lat.toFixed(4)}, {selectedAtmMarker.position.lng.toFixed(4)}</p>
+								<p>Services: </p>
 							</div>
 						</InfoWindow>
 					)}

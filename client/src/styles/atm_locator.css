@@ -28,3 +28,20 @@
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 	padding: 10px;
 }
+.atm-info-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+.atm-info-title {
+	margin: 0;
+    font-size: 1.2em;
+    text-align: center; 
+    flex-grow: 1;
+}
+.atm-marker-icon {
+	width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
