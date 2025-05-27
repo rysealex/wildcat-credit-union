@@ -45,10 +45,12 @@ module.exports = pool; // export the pool for use in routes
 const userRoutes = require('./routes/user');
 const bankAccountRoutes = require('./routes/bank_account');
 const registrationRoutes = require('./routes/registration');
+const transactionHistoryRoutes = require('./routes/transaction_history');
 // use the routes
 app.use('/api', userRoutes);
 app.use('/api', bankAccountRoutes);
 app.use('/api', registrationRoutes);
+app.use('/api', transactionHistoryRoutes);
 
 // handle the request at localhost port 5000
 app.get('/', (req, res) => {
