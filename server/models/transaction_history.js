@@ -17,7 +17,7 @@ const TransactionHistory = {
 	addTransaction: async (transactionDetails) => {
 		try {
 			const { ssn, date, transaction_type, transaction_amount } = transactionDetails;
-			// construct the SQL query to insert a new transaction
+			// construct the SQL query to insert a new transaction (transaction_id is auto-incremented)
 			const transactionToInsert = {
 				ssn: ssn,
 				date: date,

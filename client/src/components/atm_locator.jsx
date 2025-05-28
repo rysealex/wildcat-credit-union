@@ -2,8 +2,9 @@ import React, { useState, useEffect, use } from 'react';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 import '../styles/atm_locator.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons';
+
+// logo for ATM marker icon
+const ATM_LOGO_URL = `logo.svg`;
 
 const AtmLocator = () => {
 
@@ -92,7 +93,11 @@ const AtmLocator = () => {
 							title={`${marker.name}`}
 							onClick={() => handleAtmMarkerClick(marker.id)}
 						>
-							<FontAwesomeIcon icon={faMoneyBillTransfer} className="atm-marker-icon" />
+							<img 
+								src={ATM_LOGO_URL}
+								alt='WCU ATM Logo'
+								className='atm-marker-icon'
+							/>
 						</AdvancedMarker>
 					))}
 
