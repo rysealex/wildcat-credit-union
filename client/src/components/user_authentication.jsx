@@ -19,7 +19,6 @@ const UserAuthentication = () => {
 	const [ssn, setSSN] = useState('');
 	const [password, setPassword] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState('');
-	const [accountNumber, setAccountNumber] = useState('');
 
 	// function to handle form submission
 	const handleSubmit = async (e) => {
@@ -33,7 +32,8 @@ const UserAuthentication = () => {
 			ssn: ssn,
 			password: password,
 			phone_number: phoneNumber,
-			account_number: accountNumber
+			// static account number for demonstration (must be exactly 12 chars); replace with actual logic
+			account_number: 'testaccount#', 
 		};
 
 		try {
@@ -84,10 +84,6 @@ const UserAuthentication = () => {
 				<div>
 					<label>Phone Number:</label>
 					<input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
-				</div>
-				<div>
-					<label>Account Number:</label>
-					<input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required />
 				</div>
 				<button type="submit" onClick={() => handleNavigation('/display_account_info')}>Join</button>
 			</form>

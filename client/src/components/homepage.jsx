@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/homepage.css';
 
 const Homepage = () => {
+
+	// use navigate hook to programmatically navigate to other routes
+	const navigate = useNavigate();
+
+	// function to handle navigation to different routes
+	const handleNavigation = (url) => {
+		navigate(url);
+	};
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -37,8 +47,8 @@ const Homepage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">Enter</button>
-                    <p className="join-wcu">Join WCU</p>
+                    <button type="submit" onClick={() => handleNavigation('/display_account_info')}>Enter</button>
+                    <a className="join-wcu" onClick={() => handleNavigation('/user_authentication')}>Join WCU</a>
                 </form>
 
             </div>
