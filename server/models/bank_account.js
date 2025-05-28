@@ -41,6 +41,20 @@ const bankAccountModel = {
 			console.error('Error adding bank account:', error);
 			throw error;
 		}
+	},
+	// function to add funds to a bank account
+	addFundsToBankAccount: async (ssn, amount) => {
+		try {
+			// update the balance of the bank account
+			const [result] = await pool.query(
+				'UPDATE bank_account SET balance = balance + ? WHERE ssn = ?', 
+				[amount, ssn]
+			);
+			return result.affectedRows;
+		} catch (error) {
+			console.error('Error adding funds to bank account:', error);
+			throw error;
+		}
 	}
 };
 
