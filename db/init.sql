@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`transaction_history` (
   `transaction_id` INT NOT NULL AUTO_INCREMENT,
   `ssn` CHAR(9) NOT NULL,
   `date` DATE NOT NULL,
-  `transaction_type` ENUM('deposit', 'withdrawal', 'transfer') NOT NULL,
+  `transaction_type` ENUM('Welcome', 'Deposit', 'Withdrawal', 'Transfer') NOT NULL,
   `transaction_amount` FLOAT NOT NULL,
   PRIMARY KEY (`transaction_id`),
   INDEX `fk_transaction_history_bank_account_idx` (`ssn` ASC) VISIBLE,
@@ -63,13 +63,18 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`transaction_history` (
 ENGINE = InnoDB;
 
 INSERT INTO bank_account VALUES
-  ('112233445', '1000.00'),
+  ('112233445', '500.00'),
     ('123456789', '500.00')
 ;
 
 INSERT INTO user VALUES
-  ('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123password', '9876543210', '123456789abc'),
-    ('John', 'Smith', 'john@gmail.com', '123456789', 'password123', '0123456789', 'abc123456789')
+  ('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123Password!', '9876543210', '123456789abc'),
+    ('John', 'Smith', 'john@gmail.com', '123456789', 'Password123!', '0123456789', 'abc123456789')
+;
+
+INSERT INTO transaction_history VALUES
+  (1, '112233445', '2025-05-29', 'Welcome', 500.00),
+    (2, '123456789', '2025-05-29', 'Welcome', 500.00)
 ;
 
 SET SQL_MODE=@OLD_SQL_MODE;

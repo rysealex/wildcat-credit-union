@@ -54,8 +54,8 @@ const UserAuthentication = () => {
 			// store the user's ssn in local storage for later use
 			localStorage.setItem('curr_user_ssn', data.ssn);
 			console.log('User added successfully:', data);
-			// navigate to the display account info page
-			handleNavigation('/display_account_info')
+			// navigate to the homepage after successful registration (user must login to continue)
+			handleNavigation('/')
 		} catch (error) {
 			console.error('Error:', error);
 		}

@@ -3,18 +3,22 @@ import React, { useState, useEffect } from 'react';
 const DisplayAccountInfo = () => {
 
 	// use state to manage transaction history
-  const [transactionHistory, setTransactionHistory] = useState([]);
+	const [transactionHistory, setTransactionHistory] = useState([]);
 
-	// use effect to fetch transaction history when the component mounts
+	// second use effect to fetch transaction history when the component mounts after ssn is set
 	useEffect(() => {
 		const fetchTransactionHistory = async () => {
 
-			// get the user's ssn from local storage
-			const currUserSsn = localStorage.getItem('curr_user_ssn');
+			// get the current user's ssn from local storage
+			const ssnFromStorage = localStorage.getItem('curr_user_ssn');
+			if (!ssnFromStorage) {
+				console.error('No user SSN found in local storage');
+				return;
+			}
 
 			try {
 				// fetch transaction history from the backend API
-				const response = await fetch(`http://localhost:5000/api/transaction_history/${currUserSsn}`);
+				const response = await fetch(`http://localhost:5000/api/transaction_history/${ssnFromStorage}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch transaction history');
 				}
