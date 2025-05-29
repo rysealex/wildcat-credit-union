@@ -137,6 +137,9 @@ button:hover {
     align-self: flex-start;
     cursor: default;
 }
+.join-wcu:hover {
+    cursor: pointer;
+}
 
 input:focus {
     border-color: var(--crimson);
