@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const DisplayAccountInfo = () => {
+const TransactionHistory = () => {
 
 	// use state to manage transaction history
 	const [transactionHistory, setTransactionHistory] = useState([]);
@@ -57,4 +57,4 @@ const DisplayAccountInfo = () => {
 	);
 };
 
-export default DisplayAccountInfo;
+export default TransactionHistory;

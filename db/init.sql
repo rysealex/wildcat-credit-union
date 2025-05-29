@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`transaction_history` (
   `transaction_id` INT NOT NULL AUTO_INCREMENT,
   `ssn` CHAR(9) NOT NULL,
   `date` DATE NOT NULL,
-  `transaction_type` ENUM('Welcome', 'Deposit', 'Withdrawal', 'Transfer') NOT NULL,
+  `transaction_type` ENUM('Welcome', 'Deposit', 'Withdrawal', 'Transfer', 'Receive') NOT NULL,
   `transaction_amount` FLOAT NOT NULL,
   PRIMARY KEY (`transaction_id`),
   INDEX `fk_transaction_history_bank_account_idx` (`ssn` ASC) VISIBLE,
