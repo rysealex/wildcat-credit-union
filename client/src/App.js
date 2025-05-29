@@ -26,10 +26,10 @@ function App() {
         <p>{message}</p>
       </div>
       <Routes>]
+        <Route path="/" element={<Homepage />} />
 
               <Route path="/" element={<SignUp />} />
         <Route path="/display_account_info" element={<DisplayAccountInfo />} />
-        <Route path="/" element={<Homepage />} />
         <Route path="/" element={<SignUp />} />
       
 
