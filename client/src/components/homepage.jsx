@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../index.css';
 import { useNavigate } from 'react-router-dom';
 import '../styles/homepage.css';
 
@@ -51,16 +52,30 @@ const Homepage = () => {
             console.error('Error checking user existence:', error);
         }
     };
+return (
+  <div className="outer-wrapper">
+    <div className="main-container">
+      <div className="logo-section">
+        <div className="logo-wrapper">
+          <img src="wcu.png" alt="WCU Logo" className="logo" />
+          <p className="tagline">Wildcat Credit Union</p>
+        </div>
+      </div>
 
-    return (
-        <div className="homepage">
-            <div className="logo-section">
-                {/* Replace with your actual logo image */}
-                <img src="/wcu.png" alt="WCU Logo" className="logo" />
-                <p className="tagline">Wildcat Credit Union</p>
-            </div>
-            <div className="divider" />
+      <div className="divider"></div>
 
+      <div className="form-section">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <button type="submit">Enter</button>
+          <p className="join-wcu">Join WCU</p>
+        </form>
+      </div>
+    </div>
+  </div>
+);
             <div className="form-section">
                 <h2>Login</h2>
                 <form onSubmit={handleLogin}>
