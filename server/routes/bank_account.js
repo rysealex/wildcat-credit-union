@@ -33,4 +33,20 @@ router.post('/bank_accounts', (req, res) => {
 		.catch(error => res.status(500).json({ error: 'Failed to add bank account' }));
 });
 
+// POST /api/bank_accounts/:ssn/funds - add funds to a bank account
+router.post('/bank_accounts/:ssn/funds', async (req, res) => {
+	const { ssn } = req.params;
+	const { amount } = req.body; // get amount from request body
+	try {
+		const affectedRows = await bankAccountModel.addFundsToBankAccount(ssn, amount);
+		if (affectedRows > 0) {
+			res.status(200).json({ message: 'Funds added successfully' });
+		} else {
+			res.status(404).json({ error: 'Bank account not found' });
+		}
+	} catch (error) {
+		res.status(500).json({ error: 'Failed to add funds to bank account' });
+	}
+});
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const userModel = require('../models/user'); // import user model
 const transactionHistoryModel = require('../models/transaction_history'); // import transaction history model
 
 // GET /api/transaction_history/:ssn - get all transactions for a user

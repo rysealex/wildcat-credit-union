@@ -4,7 +4,7 @@ import SignUp from "./components/sign_up";
 import DisplayAccountInfo from "./components/display_account_info";
 import AtmLocator from "./components/atm_locator";
 import Homepage from "./components/homepage";
-// import Deposit from "./components/deposit"; // Uncomment if you have a Deposit component
+import Deposit from "./components/deposit";
 
 function App() {
 
@@ -34,6 +34,7 @@ function App() {
       
 
         <Route path="/atm_locator" element={<AtmLocator />} />
+        <Route path="/deposit" element={<Deposit />} />
       </Routes>
     </Router>
   )
