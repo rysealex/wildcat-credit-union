@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import UserAuthentication from "./components/user_authentication";
+import SignUp from "./components/sign_up";
 import DisplayAccountInfo from "./components/display_account_info";
 import AtmLocator from "./components/atm_locator";
 import Homepage from "./components/homepage";
+// import Deposit from "./components/deposit"; // Uncomment if you have a Deposit component
 
 function App() {
 
@@ -12,10 +13,10 @@ function App() {
 
   // fetch message from backend service
   useEffect(() => {
-  fetch('http://localhost:5000/')
-    .then(res => res.text())
-    .then(data => setMessage(data))
-    .catch(err => setMessage('Error: ' + err));
+    fetch('http://localhost:5000/')
+      .then(res => res.text())
+      .then(data => setMessage(data))
+      .catch(err => setMessage('Error: ' + err));
   }, []);
 
   return (
@@ -24,10 +25,14 @@ function App() {
         <h1>WCU Frontend</h1>
         <p>{message}</p>
       </div>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/" element={<UserAuthentication />} />
+      <Routes>]
+
+              <Route path="/" element={<SignUp />} />
         <Route path="/display_account_info" element={<DisplayAccountInfo />} />
+        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<SignUp />} />
+      
+
         <Route path="/atm_locator" element={<AtmLocator />} />
       </Routes>
     </Router>

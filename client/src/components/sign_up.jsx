@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../index.css';
 
 // this component handles user authentication
-const UserAuthentication = () => {
+const SignUp = () => {
 
 	// use navigate hook to programmatically navigate to other routes
 	const navigate = useNavigate();
@@ -58,41 +59,43 @@ const UserAuthentication = () => {
 	};
 
 	return (
-		<div className="form-container">
-			<h1>WCU Frontend</h1>
-			<form onSubmit={handleSubmit}>
-				<div>
+		<div className="form-wrapper">
+			<form className="signup-form" onSubmit={handleSubmit}>
+				<img src="/mount.png" alt="Join Wildcat Credit Union" className="signup-header-logo" />
+				<div className="form-group">
 					<label>First Name:</label>
 					<input type="text" value={fname} onChange={(e) => setFname(e.target.value)} required />
 				</div>
-				<div>
+
+				<div className="form-group">
 					<label>Last Name:</label>
 					<input type="text" value={lname} onChange={(e) => setLname(e.target.value)} required />
 				</div>
-				<div>
+
+				<div className="form-group">
 					<label>Email:</label>
 					<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 				</div>
-				<div>
-					<label>SSN:</label>
-					<input type="text" value={ssn} onChange={(e) => setSSN(e.target.value)} required />
-				</div>
-				<div>
-					<label>Password:</label>
-					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-				</div>
-				<div>
+
+				<div className="form-group">
 					<label>Phone Number:</label>
 					<input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
 				</div>
-				<div>
-					<label>Account Number:</label>
-					<input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required />
+
+				<div className="form-group">
+					<label>SSN:</label>
+					<input type="text" value={ssn} onChange={(e) => setSSN(e.target.value)} required />
 				</div>
-				<button type="submit" onClick={() => handleNavigation('/display_account_info')}>Join</button>
+
+				<div className="form-group">
+					<label>Password:</label>
+					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+				</div>
+
+				<button type="submit">Join</button>
 			</form>
 		</div>
 	);
 };
 
-export default UserAuthentication;
+export default SignUp;
