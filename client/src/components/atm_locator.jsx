@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect, use } from 'react';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
-import '../styles/atm_locator.css';
+import '../index.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
 
 // logo for ATM marker icon
