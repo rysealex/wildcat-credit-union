@@ -8,9 +8,12 @@ const Deposit = () => {
 	const handleDeposit = async (e) => {
 		e.preventDefault();
 
+		// get the user's SSN from local storage
+		const currUserSsn = localStorage.getItem('curr_user_ssn');
+
 		// create the transaction object
 		const transactionData = {
-			ssn: '123456789', // static SSN for demonstration; replace with actual user SSN
+			ssn: currUserSsn, // use the actual user SSN from local storage
 			date: new Date().toISOString().slice(0, 10), // current date in YYYY-MM-DD format
 			transaction_type: 'deposit',
 			transaction_amount: parseFloat(depositAmount),

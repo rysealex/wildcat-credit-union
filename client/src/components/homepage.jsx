@@ -39,6 +39,8 @@ const Homepage = () => {
             // 4. check if the user exists
             if (data.exists) {
                 console.log('User exists, navigating to account info page.');
+                // store the user's ssn in local storage for later use
+                localStorage.setItem('curr_user_ssn', data.ssn);
                 // 5. navigate to the display account info page
                 handleNavigation('/display_account_info');
             } else {

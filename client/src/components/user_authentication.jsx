@@ -51,7 +51,11 @@ const UserAuthentication = () => {
 			}
 
 			const data = await response.json();
+			// store the user's ssn in local storage for later use
+			localStorage.setItem('curr_user_ssn', data.ssn);
 			console.log('User added successfully:', data);
+			// navigate to the display account info page
+			handleNavigation('/display_account_info')
 		} catch (error) {
 			console.error('Error:', error);
 		}
@@ -85,7 +89,7 @@ const UserAuthentication = () => {
 					<label>Phone Number:</label>
 					<input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
 				</div>
-				<button type="submit" onClick={() => handleNavigation('/display_account_info')}>Join</button>
+				<button type="submit">Join</button>
 			</form>
 		</div>
 	);

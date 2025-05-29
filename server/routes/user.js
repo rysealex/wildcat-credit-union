@@ -17,18 +17,23 @@ router.post('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to add user' }));
 });
 
-// POST /api/users/check - check if user exists by email and password
-router.post('/users/check', (req, res) => {
+// POST /api/users/check - check if user exists by email and password and return the user ssn
+router.post('/users/check', async (req, res) => {
     const { email, password } = req.body;
-    userModel.userExists(email, password)
-        .then(exists => {
-            if (exists) {
-                res.status(200).json({ exists: true });
-            } else {
-                res.status(404).json({ exists: false });
-            }
-        })
-        .catch(error => res.status(500).json({ error: 'Failed to check user existence' }));
+    
+    try {
+        // 1. find the user by email and password
+        const user = await userModel.userExists(email, password);
+        if (user) {
+            // 2. user exists, return the user ssn
+            res.status(200).json({ exists: true, ssn: user.ssn });
+        } else {
+            // 3. user does not exist
+            res.status(404).json({ exists: false });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to check user existence' });
+    }
 });
 
 module.exports = router;

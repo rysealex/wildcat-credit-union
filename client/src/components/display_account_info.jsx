@@ -8,9 +8,13 @@ const DisplayAccountInfo = () => {
 	// use effect to fetch transaction history when the component mounts
 	useEffect(() => {
 		const fetchTransactionHistory = async () => {
+
+			// get the user's ssn from local storage
+			const currUserSsn = localStorage.getItem('curr_user_ssn');
+
 			try {
 				// fetch transaction history from the backend API
-				const response = await fetch('http://localhost:5000/api/transaction_history/123456789');
+				const response = await fetch(`http://localhost:5000/api/transaction_history/${currUserSsn}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch transaction history');
 				}
