@@ -17,4 +17,18 @@ router.post('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to add user' }));
 });
 
+// POST /api/users/check - check if user exists by email and password
+router.post('/users/check', (req, res) => {
+    const { email, password } = req.body;
+    userModel.userExists(email, password)
+        .then(exists => {
+            if (exists) {
+                res.status(200).json({ exists: true });
+            } else {
+                res.status(404).json({ exists: false });
+            }
+        })
+        .catch(error => res.status(500).json({ error: 'Failed to check user existence' }));
+});
+
 module.exports = router;

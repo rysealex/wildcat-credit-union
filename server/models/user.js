@@ -36,6 +36,16 @@ const userModel = {
 			console.error('Error adding user:', error);
 			throw error;
 		}
+	},
+	// function to check if a user exists by email and password
+	userExists: async (email, password) => {
+		try {
+			const [rows] = await pool.query('SELECT * FROM user WHERE email = ? AND password = ?', [email, password]);
+			return rows.length > 0; // returns true if user exists, false otherwise
+		} catch (error) {
+			console.error('Error checking user credentials:', error);
+			throw error;
+		}
 	}
 };
 
