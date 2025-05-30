@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`user` (
   `email` VARCHAR(45) NOT NULL UNIQUE,
   `ssn` CHAR(9) NOT NULL,
   `password` VARCHAR(25) NOT NULL,
-  `phone_number` CHAR(10) NOT NULL,
+  `phone_number` CHAR(10) NOT NULL UNIQUE,
   `account_number` CHAR(12) NOT NULL,
   PRIMARY KEY (`ssn`),
   CONSTRAINT `user_fk_bank_account`
@@ -73,8 +73,8 @@ INSERT INTO user VALUES
 ;
 
 INSERT INTO transaction_history VALUES
-  (1, '112233445', '2025-05-29', 'Welcome', 500.00),
-    (2, '123456789', '2025-05-29', 'Welcome', 500.00)
+  (1, '112233445', '2025-05-29', 'Welcome', '500.00'),
+    (2, '123456789', '2025-05-29', 'Welcome', '500.00')
 ;
 
 SET SQL_MODE=@OLD_SQL_MODE;

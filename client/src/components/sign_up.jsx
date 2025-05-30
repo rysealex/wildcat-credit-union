@@ -20,7 +20,6 @@ const SignUp = () => {
 	const [ssn, setSSN] = useState('');
 	const [password, setPassword] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState('');
-	const [accountNumber, setAccountNumber] = useState('');
 
 	// function to handle form submission
 	const handleSubmit = async (e) => {
@@ -34,7 +33,7 @@ const SignUp = () => {
 			ssn: ssn,
 			password: password,
 			phone_number: phoneNumber,
-			account_number: accountNumber
+			account_number: 'testAccount#' // placeholder for account number (exactly 12 characters)
 		};
 
 		try {
@@ -53,6 +52,8 @@ const SignUp = () => {
 
 			const data = await response.json();
 			console.log('User added successfully:', data);
+			// navigate to the home page (log back into account) after successful registration
+			handleNavigation('/');
 		} catch (error) {
 			console.error('Error:', error);
 		}
