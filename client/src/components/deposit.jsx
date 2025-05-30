@@ -15,7 +15,7 @@ const Deposit = () => {
 		const transactionData = {
 			ssn: currUserSsn, // use the actual user SSN from local storage
 			date: new Date().toISOString().slice(0, 10), // current date in YYYY-MM-DD format
-			transaction_type: 'deposit',
+			transaction_type: 'Deposit',
 			transaction_amount: parseFloat(depositAmount),
 		};
 

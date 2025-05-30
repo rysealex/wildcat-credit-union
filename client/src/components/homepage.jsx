@@ -41,6 +41,8 @@ const Homepage = () => {
                 console.log('User exists, navigating to account info page.');
                 // store the user's ssn in local storage for later use
                 localStorage.setItem('curr_user_ssn', data.ssn);
+                // store the user's phone number in local storage for later use
+                localStorage.setItem('curr_user_phone_number', data.phone_number);
                 // 5. navigate to the dashboard page
                 handleNavigation('/dashboard');
             } else {

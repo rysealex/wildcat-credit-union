@@ -11,6 +11,16 @@ const userModel = {
 			throw error;
 		}
 	},
+	// function to get user by phone number
+	getUserByPhoneNumber: async (phoneNumber) => {
+		try {
+			const [rows, fields] = await pool.query('SELECT * FROM user WHERE phone_number = ?', [phoneNumber]);
+			return rows;
+		} catch (error) {
+			console.error('Error fetching user by phone number:', error);
+			throw error;
+		}
+	},
 	// function to add a new user
 	addUser: async (userData) => {
 		try {

@@ -33,7 +33,7 @@ const Withdrawal = () => {
         const transactionData = {
             ssn: currUserSsn, // use the actual user SSN from local storage
             date: new Date().toISOString().slice(0, 10), // current date in YYYY-MM-DD format
-            transaction_type: 'withdrawal',
+            transaction_type: 'Withdrawal',
             transaction_amount: parseFloat(withdrawalAmount),
         };
 
