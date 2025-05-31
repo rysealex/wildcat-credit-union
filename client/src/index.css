@@ -291,3 +291,9 @@ button:hover {
     height: 40px;
     object-fit: contain;
 }
+
+.input-error-message {
+  color: red;
+  font-size: 12px;
+  margin: auto;
+}

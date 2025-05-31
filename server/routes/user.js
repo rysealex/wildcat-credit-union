@@ -25,6 +25,22 @@ router.get('/users/:phone_number', async (req, res) => {
     }
 });
 
+// GET /api/users/email/:email - get user by email
+router.get('/users/email/:email', async (req, res) => {
+    const { email } = req.params;
+    try {
+        const user = await userModel.getUserByEmail(email);
+        // check if user exists
+        if (user && user.length > 0) {
+            res.json(user[0]);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: `Failed to retrieve user with email ${email}` });
+    }
+});
+
 // POST /api/users - add a new user
 router.post('/users', (req, res) => {
     const userData = req.body; // get user data from request body

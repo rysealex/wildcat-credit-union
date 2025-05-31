@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,11 +12,57 @@ const Homepage = () => {
 		navigate(url);
 	};
 
+    // use state to manage email and password inputs
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    // use state to hold the password error message
+    const [passwordError, setPasswordError] = useState('');
+    // use state to hold the backend error message
+    const [backendError, setBackendError] = useState('');
+
+    // reference to the password input field
+    const passwordInputRef = useRef(null);
+
+    // function to validate the password
+    const validatePassword = (password) => {
+        // requirements for password
+        const minLen = 5;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-={};':"|,.<>?]/.test(password);
+
+        // check if password meets the requirements
+        if (password.length < minLen) {
+            return `Password must be at least ${minLen} characters long`;
+        }
+        if (!hasUpperCase) {
+            return 'Password must contain at least one uppercase letter';
+        }
+        if (!hasNumber) {
+            return 'Password must contain at least one number';
+        }
+        if (!hasSpecialChar) {
+            return 'Password must contain at least one special character';
+        }
+        // If all checks pass, clear the error message and return no error message
+        setPasswordError('');
+        return '';
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        // perform password validation
+        const passwordValidationError = validatePassword(password);
+        if (passwordValidationError) {
+            // if validation fails, set the error message and stop further execution
+            setPasswordError(passwordValidationError);
+            // focus the password input field for user convenience
+            passwordInputRef.current.focus();
+            return;
+        } else {
+            setPasswordError(''); // clear the error if validation passes
+        }
         
         try {
             // 1. call the backend API to check if the user exists
@@ -29,7 +75,19 @@ const Homepage = () => {
             });
             // 2. check if the response is ok
             if (!response.ok) {
-                console.error('Login API error:', response.statusText);
+                const errorData = await response.json();
+                // check what type of error occurred
+                if (response.status === 400) {
+                    // bad request, likely due to validation errors
+                    setBackendError('Invalid input. Please check your email and password.');
+                } else if (response.status === 401) {
+                    // unauthorized, likely due to incorrect credentials
+                    setBackendError('Invalid credentials. Please try again.');
+                } else if (response.status === 404) {
+                    // not found, user does not exist
+                    setBackendError('User not found. Please check your credentials or sign up.');
+                }
+                console.error('Login API error:', errorData.message || response.statusText);
                 return;
             }
 
@@ -46,11 +104,12 @@ const Homepage = () => {
                 // 5. navigate to the dashboard page
                 handleNavigation('/dashboard');
             } else {
-                alert('User does not exist. Please check your credentials or sign up.');
+                setBackendError('User does not exist. Please check your credentials or sign up');
             }
 
         } catch (error) {
             console.error('Error checking user existence:', error);
+            setBackendError('An unexpected error occurred. Please try again later.');
         }
     };
     return (
@@ -68,8 +127,23 @@ const Homepage = () => {
         <div className="form-section">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input 
+                type="email" 
+                placeholder="Email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+            />
+            <input 
+                type="password" 
+                placeholder="Password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                ref={passwordInputRef} 
+                required 
+            />
+            {passwordError && <p className="input-error-message">{passwordError}</p>}
+            {backendError && <p className="input-error-message">{backendError}</p>}
             <button type="submit">Enter</button>
             <p className="join-wcu" onClick={() => handleNavigation('/sign_up')}>Join WCU</p>
             </form>
