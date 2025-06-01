@@ -11,12 +11,13 @@ router.get('/users', (req, res) => {
 
 // GET /api/users/:phone_number - get user by phone number
 router.get('/users/:phone_number', async (req, res) => {
+    console.log('user route getUserByPhoneNumber called with:', req.params.phone_number);
     const { phone_number } = req.params;
     try {
         const user = await userModel.getUserByPhoneNumber(phone_number);
         // check if user exists
-        if (user && user.length > 0) {
-            res.json(user[0]);
+        if (user) {
+            res.json(user);
         } else {
             res.status(404).json({ error: 'User not found' });
         }

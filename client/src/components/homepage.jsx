@@ -99,8 +99,10 @@ const Homepage = () => {
                 console.log('User exists, navigating to account info page.');
                 // store the user's ssn in local storage for later use
                 localStorage.setItem('curr_user_ssn', data.ssn);
+                // clean the phone number by removing non-digit characters
+                const cleanedPhoneNumber = data.phone_number ? String(data.phone_number).replace(/\D/g, '') : '';
                 // store the user's phone number in local storage for later use
-                localStorage.setItem('curr_user_phone_number', data.phone_number);
+                localStorage.setItem('curr_user_phone_number', cleanedPhoneNumber);
                 // 5. navigate to the dashboard page
                 handleNavigation('/dashboard');
             } else {

@@ -13,8 +13,10 @@ const userModel = {
 	},
 	// function to get user by phone number
 	getUserByPhoneNumber: async (phoneNumber) => {
+		console.log('user model getUserByPhoneNumber called with:', phoneNumber);
 		try {
 			const [rows, fields] = await pool.query('SELECT * FROM user WHERE phone_number = ?', [phoneNumber]);
+			console.log("userModel: Query result for phone number:", rows);
 			return rows.length > 0 ? rows[0] : null;
 		} catch (error) {
 			console.error('Error fetching user by phone number:', error);

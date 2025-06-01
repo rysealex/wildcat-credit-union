@@ -1,35 +1,107 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Transfer = () => {
     // use state for the transfer amount and is found recipient
     const [transferAmount, setTransferAmount] = useState('');
     const [isRecipientFound, setIsRecipientFound] = useState(false);
-    // use state for the search user by phone number
-    const [searchPhoneNumber, setSearchPhoneNumber] = useState('');
+    // display phone number in the desired format
+    const [displayPhoneNumber, setDisplayPhoneNumber] = useState('');
+    // raw phone number input for storage
+    const [rawPhoneNumber, setRawPhoneNumber] = useState('');
+    // use state to hold the input error messages
+    const [phoneNumberError, setPhoneNumberError] = useState('');
 
+    // use state for the transfer and phone number success messages
+    const [transferSuccessMessage, setTransferSuccessMessage] = useState('');
+    const [phoneNumberSuccessMessage, setPhoneNumberSuccessMessage] = useState('');
+
+    // use state to disable the transfer input/button during processing
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // reference to the phone number and transfer amount input fields
+    const phoneNumberInputRef = useRef(null);
+    const transferAmountInputRef = useRef(null);
+
+    // function to handle phone number formatting
+	const handlePhoneNumberChange = (e) => {
+		const input = e.target.value;
+		// remove all non-digit characters
+		let digits = input.replace(/\D/g, '');
+		// limit to 10 digits
+		digits = digits.substring(0, 10);
+		// format the phone number as (XXX) XXX-XXXX
+		if (digits.length === 10) {
+			setDisplayPhoneNumber(`(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6)}`);
+		} else {
+			setDisplayPhoneNumber(digits);
+		}
+		// update the raw phone number state
+		setRawPhoneNumber(digits);
+	};
+
+    // perform phone number validation
+	const validatePhoneNumber = () => {
+		if (rawPhoneNumber.length !== 10) {
+			setPhoneNumberError('Phone number must be exactly 10 digits');
+			// focus the phone number input field for user convenience
+			phoneNumberInputRef.current.focus();
+			return;
+		} else {
+			setPhoneNumberError('');
+		}
+	};
+
+    // handle the cancel search button click
+    const handleCancelSearch = () => {
+        // reset all states related to the recipient search and transfer
+        setIsRecipientFound(false);
+        setTransferAmount('');
+        setDisplayPhoneNumber('');
+        setRawPhoneNumber('');
+        setPhoneNumberError('');
+        setPhoneNumberSuccessMessage('');
+        setTransferSuccessMessage('');
+        setIsProcessing(false);
+    };
+    
     // handle the search for recipient by phone number
     const handleSearch = async (e) => {
         e.preventDefault();
+
+        // prevent search if recipient is already found
+        if (isRecipientFound) {
+            return;
+        }
 
         // get the current user's phone number from local storage
         const currUserPhoneNumber = localStorage.getItem('curr_user_phone_number');
 
         // first check if the search phone number is the same as the current user's phone number
-        if (searchPhoneNumber === currUserPhoneNumber) {
-            alert('You cannot transfer money to yourself. Please enter a different phone number.');
+        if (rawPhoneNumber === currUserPhoneNumber) {
+            setPhoneNumberError('You cannot transfer money to yourself. Please enter a different phone number.');
+            // focus the phone number input field for user convenience
+			phoneNumberInputRef.current.focus();
             return;
         }
 
         // fetch the user by phone number
-        const response = await fetch(`http://localhost:5000/api/users/${searchPhoneNumber}`);
-        
+        const response = await fetch(`http://localhost:5000/api/users/${rawPhoneNumber}`);
+        console.log('searching for user by phone number:', rawPhoneNumber);
+
         if (!response.ok) {
             console.error('Failed to fetch user by phone number');
-            alert('User not found. Please check the phone number and try again.');
+            setPhoneNumberError('User not found. Please check the phone number and try again.');
+            // focus the phone number input field for user convenience
+			phoneNumberInputRef.current.focus();
+            // set recipient found state to false
+            setIsRecipientFound(false);
+            // clear success message for phone number
+            setPhoneNumberSuccessMessage('');
             return;
         }
 
-        alert('User found! You can now proceed with the transfer.');
+        // show success message
+        setPhoneNumberSuccessMessage(`User found: ${displayPhoneNumber}`);
 
         // set the recipient found state to true
         setIsRecipientFound(true);
@@ -44,7 +116,13 @@ const Transfer = () => {
     // handle the transfer form submission
     const handleTransfer = async (e) => {
         e.preventDefault();
-        
+
+        // prevent input/clicks while processing
+        if (isProcessing) {
+            return;
+        }
+        setIsProcessing(true);
+
         // get the user's SSN from local storage
         const currUserSsn = localStorage.getItem('curr_user_ssn');
 
@@ -53,6 +131,9 @@ const Transfer = () => {
         if (!balanceResponse.ok) {
             console.error('Failed to fetch bank account balance');
             alert('Failed to fetch bank account balance. Please try again later.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
         // parse the response to get the balance
@@ -60,6 +141,9 @@ const Transfer = () => {
         // check if the balance is sufficient for the transfer
         if (balanceData.balance < parseFloat(transferAmount)) {
             alert('Insufficient balance for this transfer.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
@@ -87,10 +171,13 @@ const Transfer = () => {
         if (!transactionResponse.ok) {
             console.error('Failed to create transaction');
             alert('Failed to create transaction. Please try again later.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
-        alert('Transaction history successful for the sender!');
+        //alert('Transaction history successful for the sender!');
 
         // step 2: update the sender's bank account balance
         const bankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${senderTransactionData.ssn}/subtract_funds`, {
@@ -107,10 +194,13 @@ const Transfer = () => {
         if (!bankAccountResponse.ok) {
             console.error('Failed to update bank account balance');
             alert('Failed to update bank account balance. Please try again later.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
-        alert('Bank account balance updated successfully for the sender!');
+        //alert('Bank account balance updated successfully for the sender!');
 
         // step 3: send the transaction data to the server for the recipient
         const recipientTransactionData = {
@@ -131,10 +221,13 @@ const Transfer = () => {
         if (!recipientTransactionResponse.ok) {
             console.error('Failed to create transaction');
             alert('Failed to create transaction. Please try again later.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
-        alert('Transaction history successful for the recipient!');
+        //alert('Transaction history successful for the recipient!');
 
         // step 4: update the recipient's bank account balance
         const recipientBankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${recipientTransactionData.ssn}/funds`, {
@@ -151,15 +244,28 @@ const Transfer = () => {
         if (!recipientBankAccountResponse.ok) {
             console.error('Failed to update recipient bank account balance');
             alert('Failed to update recipient bank account balance. Please try again later.');
+            // focus the transfer amount input field for user convenience
+			transferAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
-        alert('Bank account balance updated successfully for the recipient!');
-        // clear the transfer amount and recipient input field
-        setTransferAmount('');
-        setSearchPhoneNumber('');
-        // reset the recipient found state
-        setIsRecipientFound(false);
+        //alert('Bank account balance updated successfully for the recipient!');
+        // show success message
+        setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}!`);
+        // reset the recipient found state after 5 seconds
+        setTimeout(() => {
+            setIsRecipientFound(false);
+            // clear the transfer amount and recipient input field
+            setTransferAmount('');
+            setDisplayPhoneNumber('');
+            setRawPhoneNumber('');
+            // clear the success messages
+            setPhoneNumberSuccessMessage('');
+            setTransferSuccessMessage('');
+            // reset processing state
+            setIsProcessing(false);
+        }, 5000);
     };
 
     return (
@@ -170,12 +276,22 @@ const Transfer = () => {
                     Recipient Phone Number:
                     <input 
                         type="text" 
-                        value={searchPhoneNumber} 
-                        onChange={(e) => setSearchPhoneNumber(e.target.value)} 
+                        value={displayPhoneNumber} 
+						onChange={handlePhoneNumberChange} 
+						onBlur={validatePhoneNumber} 
                         required 
+                        ref={phoneNumberInputRef}
+                        disabled={isRecipientFound}
                     />
+                    {phoneNumberError && <p className="input-error-message">{phoneNumberError}</p>}
+                    {phoneNumberSuccessMessage && <p className="success-message">{phoneNumberSuccessMessage}</p>}
                 </label>
-                <button type="submit">Search</button>
+                <button type="submit" disabled={isRecipientFound}>Search</button>
+                {isRecipientFound && !isProcessing && ( 
+                    <button type="button" onClick={handleCancelSearch} className="cancel-button">
+                        Cancel
+                    </button>
+                )}
             </form>
 
             {isRecipientFound && (
@@ -184,12 +300,18 @@ const Transfer = () => {
                         Transfer Amount:
                         <input 
                             type="number" 
+                            min='1.00'
+                            max='500.00'
+                            step='0.01'
                             value={transferAmount} 
                             onChange={(e) => setTransferAmount(e.target.value)} 
                             required 
+                            ref={transferAmountInputRef}
+                            disabled={isProcessing}
                         />
                     </label>
-                    <button type="submit">Transfer</button>
+                    {transferSuccessMessage && <p className="success-message">{transferSuccessMessage}</p>}
+                    <button type="submit" disabled={isProcessing}>Transfer</button>
                 </form>
             )}
         </div>   

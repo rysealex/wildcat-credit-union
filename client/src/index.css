@@ -297,3 +297,9 @@ button:hover {
   font-size: 12px;
   margin: auto;
 }
+
+.success-message {
+  color: green;
+  font-size: 12px;
+  margin: auto;
+}

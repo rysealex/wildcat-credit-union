@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Withdrawal = () => {
     // use state to manage withdrawal amount and success message
     const [withdrawalAmount, setWithdrawalAmount] = useState('');
+    // use state to manage the success message
+    const [successMessage, setSuccessMessage] = useState('');
+    // use state to manage the error message
+    const [errorMessage, setErrorMessage] = useState('');
+    // use state to disable the input/button while processing the withdrawal
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // reference to the withdrawal amount input field
+    const withdrawalAmountInputRef = useRef(null);
 
     // handle the withdrawal form submission
     const handleWithdrawal = async (e) => {
         e.preventDefault();
+
+        // prevent input/clicks while processing
+        if (isProcessing) {
+            return;
+        }
+        setIsProcessing(true);
 
         // get the user's SSN from local storage
         const currUserSsn = localStorage.getItem('curr_user_ssn');
@@ -16,7 +31,8 @@ const Withdrawal = () => {
 
         if (!balanceResponse.ok) {
             console.error('Failed to fetch bank account balance');
-            alert('Failed to fetch bank account balance. Please try again later.');
+            setErrorMessage('Failed to fetch bank account balance. Please try again later.');
+            setIsProcessing(false);
             return;
         }
 
@@ -25,7 +41,9 @@ const Withdrawal = () => {
 
         // check if the balance is sufficient for the withdrawal
         if (balanceData.balance < parseFloat(withdrawalAmount)) {
-            alert('Insufficient balance for this withdrawal.');
+            setErrorMessage('Insufficient balance for this withdrawal.');
+            withdrawalAmountInputRef.current.focus();
+            setIsProcessing(false);
             return;
         }
 
@@ -64,11 +82,23 @@ const Withdrawal = () => {
             if (!bankAccountResponse.ok) {
                 throw new Error('Failed to update bank account balance');
             }
-            // clear the withdrawal amount input field
-            setWithdrawalAmount('');
+            // show success message
+            setSuccessMessage(`Successfully withdrew $${transactionData.transaction_amount}!`);
+            // reset the withdrawal form after 5 seconds
+            setTimeout(() => {
+                // clear the withdrawal amount input field
+                setWithdrawalAmount('');
+                // clear the success message
+                setSuccessMessage('');
+                // reset processing state
+                setIsProcessing(false);
+            }, 5000);
+            
         } catch (error) {
             console.error('Error during withdrawal:', error);
-            alert('Withdrawal failed. Please try again.');
+            setErrorMessage('Withdrawal failed. Please try again.');
+            withdrawalAmountInputRef.current.focus();
+            setIsProcessing(false);
         }
     };
 
@@ -79,12 +109,19 @@ const Withdrawal = () => {
 				<label htmlFor="withdrawalAmount">Amount to Withdraw:</label>
 				<input
 					type="number"
+                    min='1.00'
+                    max='500.00'
+                    step='0.01'
 					id="withdrawalAmount"
 					value={withdrawalAmount}
 					onChange={(e) => setWithdrawalAmount(e.target.value)}
 					required
+                    ref={withdrawalAmountInputRef}
+                    disabled={isProcessing}
 				/>
-				<button type="submit">Withdraw</button>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {successMessage && <p className="success-message">{successMessage}</p>}
+				<button type="submit" disabled={isProcessing}>Withdraw</button>
 			</form>
 		</div>
     )
