@@ -213,6 +213,77 @@ button:hover {
   display: block;
 }
 
+.dashboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background);
+  padding: 2rem;
+}
+
+.dashboard-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.dashboard-tabs {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.dashboard-heading {
+  color: var(--crimson);
+  margin-bottom: 1.5rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.account-info p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: var(--text);
+  font-family: 'Open Sans', sans-serif;
+  
+}
+
+.dashboard-tab {
+  background-color: var(--crimson);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-tab:hover {
+  background-color: #8b1f2a; /* deeper crimson */
+  
+}
+
+.tab-icon {
+  font-size: 1.1rem;
+}
+.dashboard-logo {
+  width: 120px;
+  margin-bottom: 1rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* 📱 Responsive */
 @media (max-width: 768px) {
   .homepage {
