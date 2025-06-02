@@ -118,6 +118,38 @@ const AtmLocator = () => {
 			address: 'Bouillon Hall, N Walnut St, Ellensburg, WA 98926',
 			hours: '24/7',
 			details: 'Located near the back of Bouillon Hall.'
+		},
+		{
+			id: 7,
+			position: { lat: 47.00672077479758, lng: -120.54127696318189 },
+			name: 'Panda Express ATM',
+			address: '405 E Dean Nicholson Blvd, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located next to the front doors of Panda Express.'
+		},
+		{
+			id: 8,
+			position: { lat: 47.008126644779956, lng: -120.5333438366846 },
+			name: 'Student Village ATM',
+			address: '1501 N Alder St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in the middle of the Student Village Apartments.'
+		},
+		{
+			id: 9,
+			position: { lat: 47.00361249636755, lng: -120.53557924016735 },
+			name: 'Basetti Dorms ATM',
+			address: '807 E 11th Ave, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in the center of the Basetti Dorms.'
+		},
+		{
+			id: 10,
+			position: { lat: 47.00188083483619, lng: -120.53481726908447 },
+			name: 'Starbucks ATM',
+			address: '908 E 10th Ave, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located at the entrance of Starbucks.'
 		}
 	];
 
