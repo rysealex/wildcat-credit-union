@@ -14,8 +14,8 @@
     "@vis.gl/react-google-maps": "^1.5.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-input-mask": "^2.0.4",
     "react-icons": "^5.5.0",
+    "react-input-mask": "^2.0.4",
     "react-router-dom": "^7.6.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
