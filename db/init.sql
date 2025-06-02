@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`user` (
   `lname` VARCHAR(40) NOT NULL,
   `email` VARCHAR(45) NOT NULL UNIQUE,
   `ssn` CHAR(9) NOT NULL,
-  `password` VARCHAR(25) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
   `phone_number` CHAR(10) NOT NULL UNIQUE,
   `account_number` CHAR(12) NOT NULL,
   PRIMARY KEY (`ssn`),

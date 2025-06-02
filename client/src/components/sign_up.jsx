@@ -45,6 +45,7 @@ const SignUp = () => {
     const validatePassword = (password) => {
         // requirements for password
         const minLen = 5;
+		const maxLen = 25;
         const hasUpperCase = /[A-Z]/.test(password);
         const hasNumber = /[0-9]/.test(password);
         const hasSpecialChar = /[!@#$%^&*()_+\-={};':"|,.<>?]/.test(password);
@@ -53,6 +54,9 @@ const SignUp = () => {
         if (password.length < minLen) {
             return `Password must be at least ${minLen} characters long`;
         }
+		if (password.length > maxLen) {
+			return `Password must be less than ${maxLen} characters long`;
+		}
         if (!hasUpperCase) {
             return 'Password must contain at least one uppercase letter';
         }
