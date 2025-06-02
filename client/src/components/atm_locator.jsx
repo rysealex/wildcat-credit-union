@@ -1,11 +1,56 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect, use } from 'react';
-import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
+import React, { useState, useEffect, useRef } from 'react';
+import { APIProvider, Map, AdvancedMarker, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import '../index.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
 
 // logo for ATM marker icon
 const ATM_LOGO_URL = `logo.svg`;
+
+// helper component to handle directions rendering
+const DirectionsComponent = ({ origin, destination, setDirectionsResult }) => {
+	const map = useMap(); // get the map instance
+	const routesLibrary = useMapsLibrary('routes'); // load the routes library
+	const directionsService = useRef(null);
+	const directionsRenderer = useRef(null);
+
+	useEffect(() => {
+		if (!map || !routesLibrary) return;
+		if (!directionsService.current) {
+      		directionsService.current = new routesLibrary.DirectionsService();
+		}
+		if (!directionsRenderer.current) {
+			directionsRenderer.current = new routesLibrary.DirectionsRenderer({ map: map });
+		}
+
+		if (origin && destination) {
+			directionsService.current.route(
+				{
+					origin: origin,
+					destination: destination,
+					travelMode: routesLibrary.TravelMode.WALKING,
+				},
+				(result, status) => {
+					if (status === 'OK' && result) {
+						directionsRenderer.current.setDirections(result);
+            			setDirectionsResult(result);
+					} else {
+						console.error('Directions request failed:', status);
+            			setDirectionsResult(null);
+					}
+				}
+			);
+		}
+
+		// cleanup function: remove the directions on the map when component unmounts or input changes
+		return () => {
+			if (directionsRenderer.current) {
+				directionsRenderer.current.setMap(null); // clear the directions from map
+			}
+		};
+	}, [map, routesLibrary, origin, destination, setDirectionsResult]);
+	return null;
+};
 
 const AtmLocator = () => {
 
@@ -17,15 +62,71 @@ const AtmLocator = () => {
 	// state to manage the currently selected ATM marker
 	const [selectedAtm, setSelectedAtm] = useState(null);
 
+	// state to store the directions result for textual display
+    const [directionsData, setDirectionsData] = useState(null);
+    // state to control showing/hiding directions on the map
+    const [showMapDirections, setShowMapDirections] = useState(false);
+
 	// set map position to CWU Ellensburg, WA
 	const mapPosition = { lat: 47.0073, lng: -120.5363 };
 	// initialize atm markers to be displayed on the map
 	const atmMarkers = [
-		{ id: 1, position: { lat: 47.0030, lng: -120.5378 }, name: 'ATM 1' },
-		{ id: 2, position: { lat: 47.0051, lng: -120.5414 }, name: 'ATM 2' },
-		{ id: 3, position: { lat: 47.0073, lng: -120.5363 }, name: 'ATM 3' },
-		{ id: 4, position: { lat: 47.0012, lng: -120.5402 }, name: 'ATM 4' },
+		{ 
+			id: 1, 
+			position: { lat: 47.002677233814836, lng: -120.53891345610913 }, 
+			name: 'Student Union & Recreation Center ATM',
+			address: '1007 N Chestnut St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located inside the SURC near the back entrance.'
+		},
+		{ 
+			id: 2, 
+			position: { lat: 47.00510997515957, lng: -120.54098948579359 }, 
+			name: 'James E. Brooks Library ATM',
+			address: 'North Wildcat Way, E Dean Nicholson Blvd, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located near the main entrance.'
+		},
+		{ 
+			id: 3, 
+			position: { lat: 47.00138308001019, lng: -120.54019823447713 }, 
+			name: 'Samuelson Hall ATM',
+			address: '111, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in front of the main entrance.'
+		},
+		{
+			id: 4,
+			position: { lat: 47.00539440098806, lng: -120.5344119536594 },
+			name: 'Jerilyn S. McIntyre Music Building ATM',
+			address: '906 E Dean Nicholson Blvd, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in front of the back entrance.'
+		},
+		{
+			id: 5,
+			position: { lat: 47.00303909818557, lng: -120.54202813617447 },
+			name: 'Science Building ATM',
+			address: '1100 N Wildcat Way, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in front of the back entrance.'
+		},
+		{
+			id: 6,
+			position: { lat: 47.00109406329281, lng: -120.5379666366666 },
+			name: 'Bouillon Hall ATM',
+			address: 'Bouillon Hall, N Walnut St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located near the back of Bouillon Hall.'
+		}
 	];
+
+	// find the currently selected ATM marker
+	const selectedAtmMarker = atmMarkers.find(marker => marker.id === selectedAtm);
+
+	// memoize userPosition and selectedAtmMarker.position for DirectionsComponent
+    const memoizedOrigin = React.useMemo(() => userPosition, [userPosition]);
+    const memoizedDestination = React.useMemo(() => selectedAtmMarker?.position, [selectedAtmMarker]);
 
 	// useEffect to fetch user's geolocation
 	useEffect(() => {
@@ -50,20 +151,29 @@ const AtmLocator = () => {
 	// handle the atm marker click event
 	const handleAtmMarkerClick = (atmId) => {
 		setSelectedAtm(atmId);
+		setDirectionsData(null);
+		setShowMapDirections(false);
 	};
 
 	// handle the atm marker close event
 	const handleAtmMarkerClose = () => {
 		setSelectedAtm(null);
+		setDirectionsData(null);
+		setShowMapDirections(false);
 	};
-
-	// find the currently selected ATM marker
-	const selectedAtmMarker = atmMarkers.find(marker => marker.id === selectedAtm);
 
 	// adjust the position of the info window to avoid overlap with the marker
 	const adjustedPosition = selectedAtmMarker
   ? { ...selectedAtmMarker.position, lat: selectedAtmMarker.position.lat + 0.0003 }
   : null;
+
+	// handle the get directions button click
+	const handleGetDirections = (event) => {
+		event.stopPropagation(); 
+		if (memoizedOrigin && memoizedDestination) {
+			setShowMapDirections(true); // show the directions on map
+		}
+	};
 
 	return (
 		<div style={{ height: '500px', width: '100%' }}>
@@ -111,13 +221,34 @@ const AtmLocator = () => {
 								<div className='atm-info-header'>
 									<h3 className="atm-info-title">{selectedAtmMarker.name}</h3>
 								</div>
-								<p>Location: {selectedAtmMarker.position.lat.toFixed(4)}, {selectedAtmMarker.position.lng.toFixed(4)}</p>
-								<p>Services: </p>
+								<p>Hours: {selectedAtmMarker.hours}</p>
+								<p>Details: {selectedAtmMarker.details}</p>
+								<p>Address: {selectedAtmMarker.address}</p>
+								<button onClick={handleGetDirections}>Directions</button>
 							</div>
 						</InfoWindow>
 					)}
+
+					{showMapDirections && memoizedOrigin && memoizedDestination && (
+						<DirectionsComponent 
+							origin={memoizedOrigin}
+							destination={memoizedDestination}
+							setDirectionsResult={setDirectionsData}
+						/>
+					)}
 				</Map>
 			</APIProvider>
+			
+			{directionsData && selectedAtmMarker && (
+				<div>
+					<h4>Directions to {selectedAtmMarker?.name}:</h4>
+					{directionsData.routes[0]?.legs[0]?.steps.map((step, index) => (
+						<p key={index} dangerouslySetInnerHTML={{ __html: step.instructions }} />
+					))}
+					<p><b>Total Distance: {directionsData.routes[0]?.legs[0]?.distance?.text}</b></p>
+					<p><b>Total Duration: {directionsData.routes[0]?.legs[0]?.duration?.text}</b></p>
+				</div>
+			)}
 		</div>
 	);
 };
