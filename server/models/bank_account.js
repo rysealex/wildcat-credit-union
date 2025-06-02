@@ -55,6 +55,20 @@ const bankAccountModel = {
 			console.error('Error adding funds to bank account:', error);
 			throw error;
 		}
+	},
+	// function to subtract funds from a bank account
+	subtractFundsFromBankAccount: async (ssn, amount) => {
+		try {
+			// update the balance of the bank account
+			const [result] = await pool.query(
+				'UPDATE bank_account SET balance = balance - ? WHERE ssn = ?', 
+				[amount, ssn]
+			);
+			return result.affectedRows;
+		} catch (error) {
+			console.error('Error subtracting funds from bank account:', error);
+			throw error;
+		}
 	}
 };
 

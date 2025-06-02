@@ -1,4 +1,5 @@
 const pool = require('../index'); // import pool connection from index.js
+const bcrypt = require('bcryptjs'); // import bcryptjs for password encryption
 
 const userModel = {
 	// function to get all users
@@ -11,17 +12,42 @@ const userModel = {
 			throw error;
 		}
 	},
+	// function to get user by phone number
+	getUserByPhoneNumber: async (phoneNumber) => {
+		console.log('user model getUserByPhoneNumber called with:', phoneNumber);
+		try {
+			const [rows, fields] = await pool.query('SELECT * FROM user WHERE phone_number = ?', [phoneNumber]);
+			console.log("userModel: Query result for phone number:", rows);
+			return rows.length > 0 ? rows[0] : null;
+		} catch (error) {
+			console.error('Error fetching user by phone number:', error);
+			throw error;
+		}
+	},
+	// function to get user by email
+	getUserByEmail: async (email) => {
+		try {
+			const [rows, fields] = await pool.query('SELECT * FROM user WHERE email = ?', [email]);
+			return rows.length > 0 ? rows[0] : null;
+		} catch (error) {
+			console.error('Error fetching user by email:', error);
+			throw error;
+		}
+	},
 	// function to add a new user
 	addUser: async (userData) => {
 		try {
 			const { fname, lname, email, ssn, password, phone_number, account_number } = userData;
+			// hash the password using bcryptjs
+			const saltRounds = 10; // salt rounds for bcrypt
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
 			// construct the SQL query to insert a new user
 			const userToInsert = {
 				fname: fname,
 				lname: lname,
 				email: email,
 				ssn: ssn,
-				password: password,
+				password: hashedPassword,
 				phone_number: phone_number,
 				account_number: account_number
 			};
@@ -38,14 +64,24 @@ const userModel = {
 		}
 	},
 	// function to check if a user exists by email and password
-	userExists: async (email, password) => {
+	userExists: async (email, plainTextPassword) => {
 		try {
-			const [rows] = await pool.query('SELECT * FROM user WHERE email = ? AND password = ?', [email, password]);
-			if (rows.length > 0) {
-                return rows[0]; // returns the full user object including ssn
-            } else {
-                return null; // return null if no user is found
-            }
+			// step 1. retrieve user from database by email only
+			const user = await userModel.getUserByEmail(email);
+			if (!user) {
+				return null; // no user found with 
+			}
+			const hashedPasswordFromDB = user.password;
+
+			// step 2. compare the plain text password with the stored hashed password
+			const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPasswordFromDB);
+			// if correct password, return the user object but exclude the password hash for security
+			if (passwordMatch) {
+				const { password, ...userWithoutPassword } = user;
+				return userWithoutPassword;
+			} else {
+				return null;
+			}
 		} catch (error) {
 			console.error('Error checking user credentials:', error);
 			throw error;

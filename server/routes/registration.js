@@ -6,8 +6,18 @@ const transactionModel = require('../models/transaction_history'); // import tra
 
 // POST /api/registration - register a new user, create a new bank account, and add a welcome transaction
 router.post('/registration', async (req, res) => {
-	const userData = req.body; // get user data from request body
+	// get the user data from the request
+	const userData = req.body;
 	try {
+		// step 0: pre-validation check for unique phone number and email
+		const existingUserByPhone = await userModel.getUserByPhoneNumber(userData.phone_number);
+		if (existingUserByPhone) {
+			return res.status(409).json({ error: 'Phone number already registered' });
+		}
+		const existingUserByEmail = await userModel.getUserByEmail(userData.email);
+		if (existingUserByEmail) {
+			return res.status(409).json({ error: 'Email already registered' });
+		}
 		// step 1: create the bank account record first
 		const newBankAccount = await bankAccountModel.addBankAccount({
 			ssn: userData.ssn, // use the ssn from user data

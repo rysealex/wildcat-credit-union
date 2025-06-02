@@ -49,4 +49,20 @@ router.post('/bank_accounts/:ssn/funds', async (req, res) => {
 	}
 });
 
+// POST /api/bank_accounts/:ssn/subtract_funds - subtract funds from a bank account
+router.post('/bank_accounts/:ssn/subtract_funds', async (req, res) => {
+	const { ssn } = req.params;
+	const { amount } = req.body; // get amount from request body
+	try {
+		const affectedRows = await bankAccountModel.subtractFundsFromBankAccount(ssn, amount);
+		if (affectedRows > 0) {
+			res.status(200).json({ message: 'Funds subtracted successfully' });
+		} else {
+			res.status(404).json({ error: 'Bank account not found or insufficient funds' });
+		}
+	} catch (error) {
+		res.status(500).json({ error: 'Failed to subtract funds from bank account' });
+	}
+});
+
 module.exports = router;

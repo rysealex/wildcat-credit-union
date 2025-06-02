@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Deposit = () => {
 	// use state to manage deposit amount and success message
 	const [depositAmount, setDepositAmount] = useState('');
-	
+	// use state to manage the success message
+	const [successMessage, setSuccessMessage] = useState('');
+	// use state to manage the error message
+	const [errorMessage, setErrorMessage] = useState('');
+	// use state to disable the input/button while processing the deposit
+	const [isProcessing, setIsProcessing] = useState(false);
+
+	// reference to the deposit amount input field
+	const depositAmountInputRef = useRef(null);
+
 	// handle the deposit form submission
 	const handleDeposit = async (e) => {
 		e.preventDefault();
+
+		// prevent input/clicks while processing
+        if (isProcessing) {
+            return;
+        }
+        setIsProcessing(true);
 
 		// get the user's SSN from local storage
 		const currUserSsn = localStorage.getItem('curr_user_ssn');
@@ -15,7 +30,7 @@ const Deposit = () => {
 		const transactionData = {
 			ssn: currUserSsn, // use the actual user SSN from local storage
 			date: new Date().toISOString().slice(0, 10), // current date in YYYY-MM-DD format
-			transaction_type: 'deposit',
+			transaction_type: 'Deposit',
 			transaction_amount: parseFloat(depositAmount),
 		};
 
@@ -46,11 +61,24 @@ const Deposit = () => {
 			if (!bankAccountResponse.ok) {
 				throw new Error('Failed to update bank account balance');
 			}
-			// clear the deposit amount input field
-			setDepositAmount('');
+			// show success message
+			setSuccessMessage(`Successfully deposited $${transactionData.transaction_amount}!`);
+			// reset the deposit form after 5 seconds
+            setTimeout(() => {
+				// clear the deposit amount input field
+				setDepositAmount('');
+				// clear the success message
+				setSuccessMessage('');
+                // reset processing state
+                setIsProcessing(false);
+            }, 5000);
+
 		} catch (error) {
 			console.error('Error during deposit:', error);
-			alert('Deposit failed. Please try again.');
+			setErrorMessage('Deposit failed. Please try again.');
+			// focus the deposit amount input field for user convenience
+			depositAmountInputRef.current.focus();
+			setIsProcessing(false);
 		}
 	};
 
@@ -61,12 +89,19 @@ const Deposit = () => {
 				<label htmlFor="depositAmount">Amount to Deposit:</label>
 				<input
 					type="number"
+					min='1.00'
+					max='500.00'
+					step='0.01'
 					id="depositAmount"
 					value={depositAmount}
 					onChange={(e) => setDepositAmount(e.target.value)}
 					required
+					ref={depositAmountInputRef}
+					disabled={isProcessing}
 				/>
-				<button type="submit">Deposit</button>
+				{errorMessage && <p className="error-message">{errorMessage}</p>}
+				{successMessage && <p className="success-message">{successMessage}</p>}
+				<button type="submit" disabled={isProcessing}>Deposit</button>
 			</form>
 		</div>
 	);
