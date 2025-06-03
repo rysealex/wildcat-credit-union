@@ -12,6 +12,18 @@ const userModel = {
 			throw error;
 		}
 	},
+	// function to get user by ssn
+	getUserBySSN: async (ssn) => {
+		console.log('user model getUserBySSN called with:', ssn);
+		try {
+			const [rows, fields] = await pool.query('SELECT * FROM user WHERE ssn = ?', [ssn]);
+			console.log("userModel: Query result for ssn:", rows);
+			return rows.length > 0 ? rows[0] : null;
+		} catch (error) {
+			console.error('Error fetching user by ssn:', error);
+			throw error;
+		}
+	},
 	// function to get user by phone number
 	getUserByPhoneNumber: async (phoneNumber) => {
 		console.log('user model getUserByPhoneNumber called with:', phoneNumber);

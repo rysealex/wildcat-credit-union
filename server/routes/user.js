@@ -9,6 +9,23 @@ router.get('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to fetch users' }));
 });
 
+// GET /api/users/:ssn - get user by ssn
+router.get('/users/:ssn', async (req, res) => {
+    console.log('user route getUserBySSN called with:', req.params.ssn);
+    const { ssn } = req.params;
+    try {
+        const user = await userModel.getUserBySSN(ssn);
+        // check if user exists
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: `Failed to retrieve user with ssn ${ssn}` });
+    }
+});
+
 // GET /api/users/:phone_number - get user by phone number
 router.get('/users/:phone_number', async (req, res) => {
     console.log('user route getUserByPhoneNumber called with:', req.params.phone_number);
