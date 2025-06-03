@@ -374,3 +374,10 @@ button:hover {
   font-size: 12px;
   margin: auto;
 }
+
+.amount-positive {
+  color: green;
+}
+.amount-negative {
+  color: red;
+}
