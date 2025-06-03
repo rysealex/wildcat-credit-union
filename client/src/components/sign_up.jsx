@@ -129,6 +129,19 @@ const SignUp = () => {
 		}
 	};
 
+	// function to generate a cryptographically secure random alphanumeric string
+	const genRandomAlphanumeric = (len) => {
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		let result = '';
+		const randomBytes = new Uint8Array(len);
+		window.crypto.getRandomValues(randomBytes); // fill array with random values
+		// map random byte to a character in chars
+		for (let i = 0; i < len; i++) {
+			result += chars.charAt(randomBytes[i] % chars.length);
+		}
+		return result;
+	}
+
 	// function to handle form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -145,6 +158,10 @@ const SignUp = () => {
             setPasswordError(''); // clear the error if validation passes
         }
 
+		// generate the current user's account number
+		const randomSuffix = genRandomAlphanumeric(9);
+		const generatedAccountNumber = `WCU${randomSuffix}`;
+
 		// create user data object
 		const userData = {
 			fname: fname,
@@ -153,7 +170,7 @@ const SignUp = () => {
 			ssn: rawSSN,
 			password: password,
 			phone_number: rawPhoneNumber,
-			account_number: 'testAccount#' // placeholder for account number (exactly 12 characters)
+			account_number: generatedAccountNumber
 		};
 
 		try {

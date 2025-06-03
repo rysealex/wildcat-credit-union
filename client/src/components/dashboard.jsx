@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
+import TransactionHistory from './transaction_history';
 import { FaMapMarkerAlt, FaExchangeAlt, FaHistory, FaMoneyBillWave } from 'react-icons/fa';
 
 const Dashboard = () => {
@@ -72,15 +73,18 @@ const Dashboard = () => {
                 <button className="dashboard-tab" onClick={() => handleNavigation('/atm_locator')}>
                     <FaMapMarkerAlt className="tab-icon" /> ATM Locator
                 </button>
-                <button className="dashboard-tab">
+                {/*<button className="dashboard-tab">
                     <FaHistory className="tab-icon" /> Transaction History
-                </button>
+                </button>*/}
                 <button className="dashboard-tab" onClick={() => handleNavigation('/transfer')}>
                     <FaExchangeAlt className="tab-icon" /> Transfer
                 </button>
-                <button className="dashboard-tab">
+                <button className="dashboard-tab" onClick={() => handleNavigation('/deposit_and_withdrawal')}>
                     <FaMoneyBillWave className="tab-icon" /> Deposit/Withdrawal
                 </button>
+            </div>
+            <div>
+                <TransactionHistory />
             </div>
         </div>
     );
