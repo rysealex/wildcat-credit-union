@@ -80,12 +80,18 @@ const Homepage = () => {
                 if (response.status === 400) {
                     // bad request, likely due to validation errors
                     setBackendError('Invalid input. Please check your email and password.');
+                    // focus the password input field for user convenience
+                    passwordInputRef.current.focus();
                 } else if (response.status === 401) {
                     // unauthorized, likely due to incorrect credentials
                     setBackendError('Invalid credentials. Please try again.');
+                    // focus the password input field for user convenience
+                    passwordInputRef.current.focus();
                 } else if (response.status === 404) {
                     // not found, user does not exist
                     setBackendError('User not found. Please check your credentials or sign up.');
+                    // focus the password input field for user convenience
+                    passwordInputRef.current.focus();
                 }
                 console.error('Login API error:', errorData.message || response.statusText);
                 return;
@@ -107,6 +113,8 @@ const Homepage = () => {
                 handleNavigation('/dashboard');
             } else {
                 setBackendError('User does not exist. Please check your credentials or sign up');
+                // focus the password input field for user convenience
+                passwordInputRef.current.focus();
             }
 
         } catch (error) {

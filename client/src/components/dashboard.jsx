@@ -31,7 +31,7 @@ const Dashboard = () => {
 
             try {
                 // step 1. fetch user information from users route for the account number
-                const userInfoResponse = await fetch(`http://localhost:5000/api/users/${ssnFromStorage}`);
+                const userInfoResponse = await fetch(`http://localhost:5000/api/users/ssn/${ssnFromStorage}`);
                 if (!userInfoResponse.ok) {
 					throw new Error('Failed to fetch user information');
 				}

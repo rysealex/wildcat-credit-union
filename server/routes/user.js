@@ -9,8 +9,8 @@ router.get('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to fetch users' }));
 });
 
-// GET /api/users/:ssn - get user by ssn
-router.get('/users/:ssn', async (req, res) => {
+// GET /api/users/ssn/:ssn - get user by ssn
+router.get('/users/ssn/:ssn', async (req, res) => {
     console.log('user route getUserBySSN called with:', req.params.ssn);
     const { ssn } = req.params;
     try {
@@ -26,8 +26,8 @@ router.get('/users/:ssn', async (req, res) => {
     }
 });
 
-// GET /api/users/:phone_number - get user by phone number
-router.get('/users/:phone_number', async (req, res) => {
+// GET /api/users/phone_number/:phone_number - get user by phone number
+router.get('/users/phone_number/:phone_number', async (req, res) => {
     console.log('user route getUserByPhoneNumber called with:', req.params.phone_number);
     const { phone_number } = req.params;
     try {
