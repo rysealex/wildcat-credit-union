@@ -3,6 +3,7 @@ import '../index.css';
 import { useNavigate } from 'react-router-dom';
 import TransactionHistory from './transaction_history';
 import { FaMapMarkerAlt, FaExchangeAlt, FaHistory, FaMoneyBillWave } from 'react-icons/fa';
+import { FiLogOut } from "react-icons/fi";
 
 const Dashboard = () => {
 
@@ -82,6 +83,9 @@ const Dashboard = () => {
                 </button>
                 <button className="dashboard-tab" onClick={() => handleNavigation('/deposit_and_withdrawal')}>
                     <FaMoneyBillWave className="tab-icon" /> Deposit/Withdrawal
+                </button>
+                <button className="dashboard-tab" onClick={() => handleNavigation('/')}>
+                    <FiLogOut className='tab-icon' /> Log Out
                 </button>
             </div>
             <div>

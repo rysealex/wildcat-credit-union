@@ -267,7 +267,16 @@ const SignUp = () => {
 				</div>
 				{backendError && <p className="input-error-message">{backendError}</p>}
 				<button type="submit">Join</button>
+				<div style={{ textAlign: 'center' }}>
+					<p>
+						Already have an account?{' '}
+						<span onClick={() => handleNavigation('/')} className="join-wcu" >
+							Click here to login!
+						</span>
+					</p>
+				</div>
 			</form>
+			
 		</div>
 	);
 };
