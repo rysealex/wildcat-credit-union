@@ -106,9 +106,9 @@ const Deposit = () => {
 
 	return (
 		<div>
-			<h2>Deposit Money</h2>
+			<h2 style={{ textAlign: 'center' }}>Deposit Funds</h2>
 			<form onSubmit={handleDeposit}>
-				<label htmlFor="depositAmount">Amount to Deposit:</label>
+				<label htmlFor="depositAmount" style={{ textAlign: 'center' }}>Amount to Deposit:</label>
 				<input
 					type="number"
 					min='1.00'

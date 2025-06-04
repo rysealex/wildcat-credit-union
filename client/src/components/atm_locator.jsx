@@ -324,25 +324,6 @@ const AtmLocator = () => {
 			<button onClick={handleGoBack} className='nav-button'>
 				Back to Dashboard
 			</button>
-			
-			{/* List of Nearby Branches*/}
-			<div className='nearby-branches-list'>
-				<h1>Ellensburg Campus ATM Locations</h1>
-				{atmMarkers.map((atmMarker, index) => (
-					<div key={index} className= 'atmMarker-item'>
-						<h3>{atmMarker.name}</h3>
-							<p>Hours of Operation: {atmMarker.hours}</p>
-							<p>{atmMarker.address}</p>
-							
-					</div>
-				))}
-			
-			</div>
-			
-			
-			
-				
-			
 
 			{directionsData && selectedAtmMarker && (
 				<div>

@@ -126,9 +126,9 @@ const Withdrawal = () => {
 
     return (
         <div>
-			<h2>Withdraw Money</h2>
+			<h2 style={{ textAlign: 'center' }}>Withdraw Funds</h2>
 			<form onSubmit={handleWithdrawal}>
-				<label htmlFor="withdrawalAmount">Amount to Withdraw:</label>
+				<label htmlFor="withdrawalAmount" style={{ textAlign: 'center' }}>Amount to Withdraw:</label>
 				<input
 					type="number"
                     min='1.00'
