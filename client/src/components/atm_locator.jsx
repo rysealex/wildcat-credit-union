@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { APIProvider, Map, AdvancedMarker, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import '../index.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
+import { FaMapLocationDot } from 'react-icons/fa6';
 
 // logo for ATM marker icon
 const ATM_LOGO_URL = `logo.svg`;
@@ -86,7 +87,7 @@ const AtmLocator = () => {
 			name: 'James E. Brooks Library ATM',
 			address: 'North Wildcat Way, E Dean Nicholson Blvd, Ellensburg, WA 98926',
 			hours: '24/7',
-			details: 'Located near the main entrance.'
+			details: 'Located near the main entrance James E. Brooks Library.'
 		},
 		{ 
 			id: 3, 
@@ -94,7 +95,7 @@ const AtmLocator = () => {
 			name: 'Samuelson Hall ATM',
 			address: '111, Ellensburg, WA 98926',
 			hours: '24/7',
-			details: 'Located in front of the main entrance.'
+			details: 'Located in front of the main entrance of Samuelson Hall.'
 		},
 		{
 			id: 4,
@@ -102,7 +103,7 @@ const AtmLocator = () => {
 			name: 'Jerilyn S. McIntyre Music Building ATM',
 			address: '906 E Dean Nicholson Blvd, Ellensburg, WA 98926',
 			hours: '24/7',
-			details: 'Located in front of the back entrance.'
+			details: 'Located in front of the back entrance of the Jerilyn S. McIntyre Music Building.'
 		},
 		{
 			id: 5,
@@ -110,7 +111,7 @@ const AtmLocator = () => {
 			name: 'Science Building ATM',
 			address: '1100 N Wildcat Way, Ellensburg, WA 98926',
 			hours: '24/7',
-			details: 'Located in front of the back entrance.'
+			details: 'Located in front of the back entrance of the Science Building.'
 		},
 		{
 			id: 6,
@@ -151,6 +152,46 @@ const AtmLocator = () => {
 			address: '908 E 10th Ave, Ellensburg, WA 98926',
 			hours: '24/7',
 			details: 'Located at the entrance of Starbucks.'
+		},
+		{
+			id: 11,
+			position: { lat: 47.00571479766147, lng: -120.53825679571558 },
+			name: 'Randall Hall ATM',
+			address: '44444 E Dean Nicholson Blvd, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located under the Randall Hall skybridge.'
+		},
+		{
+			id: 12,
+			position: { lat: 47.00479659839781, lng: -120.53883078852003 },
+			name: 'International Center ATM',
+			address: 'International Center, 1262 N Walnut St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located on the East side of the International Center.'
+		},
+		{
+			id: 13,
+			position: { lat: 47.0068890454306, lng: -120.53890052592162 },
+			name: 'Nicholson Pavillion ATM',
+			address: '1500 N Walnut St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located in between the Nicholson Pavillion and Dorothy Purser Hall.'
+		},
+		{
+			id: 14,
+			position: { lat: 47.00850405122618, lng: -120.53924653098005 },
+			name: 'Tomlinson Stadium ATM',
+			address: '1699, 1601 N Walnut St, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located at the front entrance of Tomlinson Stadium.'
+		},
+		{
+			id: 15,
+			position: { lat: 47.00014328392123, lng: -120.5423656852819 },
+			name: 'Barge Hall ATM',
+			address: '400 E University Way, Ellensburg, WA 98926',
+			hours: '24/7',
+			details: 'Located next to the main doors of Barge Hall.'
 		}
 	];
 
@@ -260,7 +301,11 @@ const AtmLocator = () => {
 								<p>Hours: {selectedAtmMarker.hours}</p>
 								<p>Details: {selectedAtmMarker.details}</p>
 								<p>Address: {selectedAtmMarker.address}</p>
-								<button onClick={handleGetDirections}>Directions</button>
+								<button 
+									className='get-directions-button' 
+									onClick={handleGetDirections}>
+										<FaMapLocationDot /> Get Directions
+								</button>
 							</div>
 						</InfoWindow>
 					)}

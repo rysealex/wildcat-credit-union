@@ -85,7 +85,7 @@ const Transfer = () => {
         }
 
         // fetch the user by phone number
-        const response = await fetch(`http://localhost:5000/api/users/${rawPhoneNumber}`);
+        const response = await fetch(`http://localhost:5000/api/users/phone_number/${rawPhoneNumber}`);
         console.log('searching for user by phone number:', rawPhoneNumber);
 
         if (!response.ok) {
@@ -252,7 +252,7 @@ const Transfer = () => {
 
         //alert('Bank account balance updated successfully for the recipient!');
         // show success message
-        setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}!`);
+        setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}`);
         // reset the recipient found state after 5 seconds
         setTimeout(() => {
             setIsRecipientFound(false);

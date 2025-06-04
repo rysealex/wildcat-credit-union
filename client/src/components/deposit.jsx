@@ -17,6 +17,10 @@ const Deposit = () => {
 	const handleDeposit = async (e) => {
 		e.preventDefault();
 
+		// clear previous messages
+        setSuccessMessage('');
+        setErrorMessage('');
+
 		// prevent input/clicks while processing
         if (isProcessing) {
             return;
@@ -35,7 +39,25 @@ const Deposit = () => {
 		};
 
 		try {
-			// step 1: add transaction to transaction history
+			// step 1. check if the current user can perform the deposit (check against daily limits)
+			const depositLimitsResponse = await fetch(
+				`http://localhost:5000/api/transaction_history/check-deposit-limits/${currUserSsn}/${depositAmount}`);
+				// check for API response
+				if (!depositLimitsResponse.ok) {
+					const errorData = await depositLimitsResponse.json();
+                	throw new Error(errorData.message || 'Failed to verify deposit limits.');
+            	}
+				
+				// get the result from the API response
+				const checkResult = await depositLimitsResponse.json();
+				if (!checkResult.allowed) {
+					// if the check returns false, display the message from the backend
+					setErrorMessage(checkResult.message);
+					setIsProcessing(false);
+					return; // stop deposit from proceeding
+            	}
+
+			// step 2: add transaction to transaction history
 			const transactionResponse = await fetch('http://localhost:5000/api/transaction_history', {
 				method: 'POST',
 				headers: {
@@ -47,7 +69,7 @@ const Deposit = () => {
 				throw new Error('Failed to deposit amount');
 			}
 
-			// step 2: update bank account balance
+			// step 3: update bank account balance
 			const bankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${transactionData.ssn}/funds`, {
 				method: 'POST',
 				headers: {
@@ -99,7 +121,11 @@ const Deposit = () => {
 					ref={depositAmountInputRef}
 					disabled={isProcessing}
 				/>
-				{errorMessage && <p className="error-message">{errorMessage}</p>}
+				{errorMessage && <p 
+					className="error-message"
+				>
+					{errorMessage}
+				</p>}
 				{successMessage && <p className="success-message">{successMessage}</p>}
 				<button type="submit" disabled={isProcessing}>Deposit</button>
 			</form>

@@ -30,4 +30,34 @@ router.post('/transaction_history', async (req, res) => {
     }
 });
 
+// GET /api/transaction_history/check-deposit-limits/:ssn/:amount - check if deposit can proceed
+router.get('/transaction_history/check-deposit-limits/:ssn/:amount', async (req, res) => {
+    // get the ssn and amount to deposit from current user
+    const ssn = req.params.ssn;
+    const amount = parseFloat(req.params.amount);
+    try {
+        // check the current user's deposit limits
+        const result = await transactionHistoryModel.checkDepositLimits(ssn, amount);
+        res.status(200).json(result); // returns { allowed: true } or { allowed: false, message: '...' }
+    } catch(error) {
+        console.error('Error checking deposit limits via API:', error);
+        res.status(500).json({ allowed: false, message: 'Internal server error during limit check.' });
+    }
+});
+
+// GET /api/transaction_history/check-withdrawal-limits/:ssn/:amount - check if withdrawal can proceed
+router.get('/transaction_history/check-withdrawal-limits/:ssn/:amount', async (req, res) => {
+    // get the ssn and amount to deposit from current user
+    const ssn = req.params.ssn;
+    const amount = parseFloat(req.params.amount);
+    try {
+        // check the current user's withdrawal limits
+        const result = await transactionHistoryModel.checkWithdrawalLimits(ssn, amount);
+        res.status(200).json(result); // returns { allowed: true } or { allowed: false, message: '...' }
+    } catch(error) {
+        console.error('Error checking withdrawal limits via API:', error);
+        res.status(500).json({ allowed: false, message: 'Internal server error during limit check.' });
+    }
+});
+
 module.exports = router;

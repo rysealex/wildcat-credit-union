@@ -9,8 +9,8 @@ router.get('/users', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Failed to fetch users' }));
 });
 
-// GET /api/users/:ssn - get user by ssn
-router.get('/users/:ssn', async (req, res) => {
+// GET /api/users/ssn/:ssn - get user by ssn
+router.get('/users/ssn/:ssn', async (req, res) => {
     console.log('user route getUserBySSN called with:', req.params.ssn);
     const { ssn } = req.params;
     try {
@@ -26,8 +26,8 @@ router.get('/users/:ssn', async (req, res) => {
     }
 });
 
-// GET /api/users/:phone_number - get user by phone number
-router.get('/users/:phone_number', async (req, res) => {
+// GET /api/users/phone_number/:phone_number - get user by phone number
+router.get('/users/phone_number/:phone_number', async (req, res) => {
     console.log('user route getUserByPhoneNumber called with:', req.params.phone_number);
     const { phone_number } = req.params;
     try {
@@ -74,12 +74,28 @@ router.post('/users/check', async (req, res) => {
     try {
         // 1. find the user by email and password
         const user = await userModel.userExists(email, password);
-        if (user) {
+        if (user.exists) {
             // 2. user exists, return the user ssn and phone number
-            res.status(200).json({ exists: true, ssn: user.ssn, phone_number: user.phone_number });
+            res.status(200).json({ 
+                exists: true, 
+                ssn: user.user.ssn, 
+                phone_number: user.user.phone_number,
+                login_attempts: user.user.login_attempts 
+            });
+        } else if (user.locked) {
+            // 3. user does exist but the account is currently locked
+             res.status(423).json({ 
+                exists: false,
+                message: user.message,
+                login_attempts: user.login_attempts
+            });
         } else {
-            // 3. user does not exist
-            res.status(404).json({ exists: false });
+            // 4. user not found or incorrect credentials
+            res.status(401).json({ 
+                exists: false,
+                message: user.message || 'Invalid credentials. Please try again.',
+                login_attempts: user.login_attempts
+            });
         }
     } catch (error) {
         res.status(500).json({ error: 'Failed to check user existence' });

@@ -17,6 +17,10 @@ const Withdrawal = () => {
     const handleWithdrawal = async (e) => {
         e.preventDefault();
 
+        // clear previous messages
+        setSuccessMessage('');
+        setErrorMessage('');
+
         // prevent input/clicks while processing
         if (isProcessing) {
             return;
@@ -56,7 +60,25 @@ const Withdrawal = () => {
         };
 
         try {
-            // step 1: add transaction to transaction history
+            // step 1. check if the current user can perform the withdrawal (check against daily limits)
+			const withdrawalLimitsResponse = await fetch(
+				`http://localhost:5000/api/transaction_history/check-withdrawal-limits/${currUserSsn}/${withdrawalAmount}`);
+				// check for API response
+				if (!withdrawalLimitsResponse.ok) {
+					const errorData = await withdrawalLimitsResponse.json();
+                	throw new Error(errorData.message || 'Failed to verify withdrawal limits.');
+            	}
+				
+				// get the result from the API response
+				const checkResult = await withdrawalLimitsResponse.json();
+				if (!checkResult.allowed) {
+					// if the check returns false, display the message from the backend
+					setErrorMessage(checkResult.message);
+					setIsProcessing(false);
+					return; // stop withdrawal from proceeding
+            	}
+
+            // step 2: add transaction to transaction history
             const transactionResponse = await fetch('http://localhost:5000/api/transaction_history', {
                 method: 'POST',
                 headers: {
@@ -68,7 +90,7 @@ const Withdrawal = () => {
                 throw new Error('Failed to withdraw amount');
             }
 
-            // step 2: update bank account balance
+            // step 3: update bank account balance
             const bankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${transactionData.ssn}/subtract_funds`, {
                 method: 'POST',
                 headers: {
@@ -119,7 +141,11 @@ const Withdrawal = () => {
                     ref={withdrawalAmountInputRef}
                     disabled={isProcessing}
 				/>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage && <p 
+                    className="error-message" 
+                >
+                    {errorMessage}
+                </p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
 				<button type="submit" disabled={isProcessing}>Withdraw</button>
 			</form>

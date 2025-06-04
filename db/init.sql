@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS `wcu_db`.`user` (
   `password` VARCHAR(255) NOT NULL,
   `phone_number` CHAR(10) NOT NULL UNIQUE,
   `account_number` CHAR(12) NOT NULL,
+  `login_attempts` INT DEFAULT 0,
+  `lock_until` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`ssn`),
   CONSTRAINT `user_fk_bank_account`
     FOREIGN KEY (`ssn`)
@@ -67,9 +69,9 @@ INSERT INTO bank_account VALUES
     ('123456789', '500.00')
 ;
 
-INSERT INTO user VALUES
-  ('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123Password!', '9876543210', '123456789abc'),
-    ('John', 'Smith', 'john@gmail.com', '123456789', 'Password123!', '0123456789', 'abc123456789')
+INSERT INTO user (fname, lname, email, ssn, password, phone_number, account_number) VALUES
+  ('Franklin', 'Wong', 'franklin@gmail.com', '112233445', '123Password!', '9876543210', 'WCU123456789'),
+    ('John', 'Smith', 'john@gmail.com', '123456789', 'Password123!', '0123456789', 'WCU987654321')
 ;
 
 INSERT INTO transaction_history VALUES

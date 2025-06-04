@@ -24,6 +24,7 @@ const Dashboard = () => {
 
             // get the current user's ssn from local storage
 			const ssnFromStorage = localStorage.getItem('curr_user_ssn');
+            console.log(ssnFromStorage);
 			if (!ssnFromStorage) {
 				console.error('No user SSN found in local storage');
 				return;
@@ -31,7 +32,7 @@ const Dashboard = () => {
 
             try {
                 // step 1. fetch user information from users route for the account number
-                const userInfoResponse = await fetch(`http://localhost:5000/api/users/${ssnFromStorage}`);
+                const userInfoResponse = await fetch(`http://localhost:5000/api/users/ssn/${ssnFromStorage}`);
                 if (!userInfoResponse.ok) {
 					throw new Error('Failed to fetch user information');
 				}
