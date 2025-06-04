@@ -74,12 +74,15 @@ router.post('/users/check', async (req, res) => {
     try {
         // 1. find the user by email and password
         const user = await userModel.userExists(email, password);
-        if (user) {
+        if (user.exists) {
             // 2. user exists, return the user ssn and phone number
-            res.status(200).json({ exists: true, ssn: user.ssn, phone_number: user.phone_number });
+            res.status(200).json({ exists: true, ssn: user.user.ssn, phone_number: user.user.phone_number });
+        } else if (user.locked) {
+            // 3. user does exist but the account is currently locked
+             res.status(423).json({ message: user.message });
         } else {
-            // 3. user does not exist
-            res.status(404).json({ exists: false });
+            // 4. user not found or incorrect credentials
+            res.status(401).json({ message: user.message || 'Invalid credentials. Please try again.' });
         }
     } catch (error) {
         res.status(500).json({ error: 'Failed to check user existence' });

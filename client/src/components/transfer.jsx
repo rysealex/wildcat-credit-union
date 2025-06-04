@@ -252,7 +252,7 @@ const Transfer = () => {
 
         //alert('Bank account balance updated successfully for the recipient!');
         // show success message
-        setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}!`);
+        setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}`);
         // reset the recipient found state after 5 seconds
         setTimeout(() => {
             setIsRecipientFound(false);

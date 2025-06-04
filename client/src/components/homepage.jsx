@@ -77,34 +77,36 @@ const Homepage = () => {
             if (!response.ok) {
                 const errorData = await response.json();
                 // check what type of error occurred
-                if (response.status === 400) {
+                if (response.status === 423) {
+                    // account is locked
+                    setBackendError(errorData.message || 'Account is temporarily locked due to too many failed attempts.');
+                } else if (response.status === 400) {
                     // bad request, likely due to validation errors
                     setBackendError('Invalid input. Please check your email and password.');
-                    // focus the password input field for user convenience
-                    passwordInputRef.current.focus();
+                    setPassword(''); // reset password field
                 } else if (response.status === 401) {
                     // unauthorized, likely due to incorrect credentials
                     setBackendError('Invalid credentials. Please try again.');
-                    // focus the password input field for user convenience
-                    passwordInputRef.current.focus();
-                } else if (response.status === 404) {
-                    // not found, user does not exist
-                    setBackendError('User not found. Please check your credentials or sign up.');
-                    // focus the password input field for user convenience
-                    passwordInputRef.current.focus();
+                    setPassword(''); // reset password field
+                } else {
+                    setBackendError(errorData.message || 'An unexpected error occurred. Please try again later.');
+                    console.error('Login API error:', errorData);
                 }
-                console.error('Login API error:', errorData.message || response.statusText);
+                passwordInputRef.current.focus(); // Focus password field for convenience on error
                 return;
             }
 
             // 3. parse the JSON response
             const data = await response.json();
+            console.log('Raw API Response Data:', data);
 
             // 4. check if the user exists
             if (data.exists) {
                 console.log('User exists, navigating to account info page.');
+        
                 // store the user's ssn in local storage for later use
                 localStorage.setItem('curr_user_ssn', data.ssn);
+                
                 // clean the phone number by removing non-digit characters
                 const cleanedPhoneNumber = data.phone_number ? String(data.phone_number).replace(/\D/g, '') : '';
                 // store the user's phone number in local storage for later use

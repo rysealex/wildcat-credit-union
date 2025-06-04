@@ -35,11 +35,14 @@ const userModel = {
 			console.error('Error fetching user by phone number:', error);
 			throw error;
 		}
-	},
-	// function to get user by email
+	}, 
+	// function to get user by email including the login_attmepts and lock_until attributes
 	getUserByEmail: async (email) => {
 		try {
-			const [rows, fields] = await pool.query('SELECT * FROM user WHERE email = ?', [email]);
+			const [rows, fields] = await pool.query(
+				'SELECT ssn, password, phone_number, email, login_attempts, lock_until FROM user WHERE email = ?', 
+				[email]
+			);
 			return rows.length > 0 ? rows[0] : null;
 		} catch (error) {
 			console.error('Error fetching user by email:', error);
@@ -75,24 +78,69 @@ const userModel = {
 			throw error;
 		}
 	},
-	// function to check if a user exists by email and password
+	// function to update a user's login attempts and lock until attributes
+	updateUserLoginAttempts: async (ssn, login_attempts, lock_until = null) => {
+		try {
+			await pool.query(
+				'UPDATE user SET login_attempts = ?, lock_until = ? WHERE ssn = ?',
+				[login_attempts, lock_until, ssn]
+			);
+			return true;
+		} catch (error) {
+			console.error('Error updating login attempts:', error);
+            throw error;
+		}
+	},
+	// function to check if a user exists by email and password with lockout logic
 	userExists: async (email, plainTextPassword) => {
 		try {
 			// step 1. retrieve user from database by email only
 			const user = await userModel.getUserByEmail(email);
 			if (!user) {
-				return null; // no user found with 
+				return { exists: false, message: 'Invalid credentials.' }; // no user found with current email
 			}
-			const hashedPasswordFromDB = user.password;
 
-			// step 2. compare the plain text password with the stored hashed password
+			// step 2. check if account is currently locked
+			const currentTime = new Date();
+			if (user.lock_until && new Date(user.lock_until) > currentTime) {
+				 const unlockTime = new Date(user.lock_until);
+				const remainingMillis = unlockTime.getTime() - currentTime.getTime();
+                const remainingMinutes = Math.ceil(remainingMillis / (1000 * 60)); // calculate the remaining minutes
+                return { 
+					exists: false, 
+					locked: true, 
+					message: `Account locked due to multiple failed login attempts. 
+							Please try again in approximately ${remainingMinutes} minutes.` 
+				};
+			}
+
+			// step 3. compare the plain text password with the stored hashed password
+			const hashedPasswordFromDB = user.password;
 			const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPasswordFromDB);
+
 			// if correct password, return the user object but exclude the password hash for security
 			if (passwordMatch) {
-				const { password, ...userWithoutPassword } = user;
-				return userWithoutPassword;
+				// step 4. successful login: reset login_attempts and lock_until
+				await userModel.updateUserLoginAttempts(user.ssn, 0, null);
+				const { password, login_attempts, lock_until, ...userWithoutSensitiveData } = user;
+
+				return { exists: true, user: userWithoutSensitiveData };
 			} else {
-				return null;
+				// step 5. unsuccessful login: increment login_attempts and possibly lock the account
+				const newAttempts = user.login_attempts + 1;
+                let newLockUntil = null;
+                const lockDurationMinutes = 10;
+
+				// check if account should be locked (starts at 0 -> 4 = 5 attempts)
+				if (newAttempts > 4) {
+					// lock for 10 minutes from now
+					newLockUntil = new Date(currentTime.getTime() + lockDurationMinutes * 60 * 1000);
+				}
+
+				// try to update the current user's login attempts
+				await userModel.updateUserLoginAttempts(user.ssn, newAttempts, newLockUntil);
+				// return invalid credentials for no account
+				return { exists: false, message: 'Invalid credentials.' };
 			}
 		} catch (error) {
 			console.error('Error checking user credentials:', error);
