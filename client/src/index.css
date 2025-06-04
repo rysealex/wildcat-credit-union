@@ -374,6 +374,11 @@ button:hover {
   font-size: 12px;
   margin: auto;
 }
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin: auto;
+}
 
 .amount-positive {
   color: green;
