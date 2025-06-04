@@ -103,7 +103,7 @@ const userModel = {
 			// step 2. check if account is currently locked
 			const currentTime = new Date();
 			if (user.lock_until && new Date(user.lock_until) > currentTime) {
-				 const unlockTime = new Date(user.lock_until);
+				const unlockTime = new Date(user.lock_until);
 				const remainingMillis = unlockTime.getTime() - currentTime.getTime();
                 const remainingMinutes = Math.ceil(remainingMillis / (1000 * 60)); // calculate the remaining minutes
                 return { 
@@ -112,6 +112,15 @@ const userModel = {
 					message: `Account locked due to multiple failed login attempts. 
 							Please try again in approximately ${remainingMinutes} minutes.` 
 				};
+			}
+
+			// check if the lockdown time has already passed
+			if (user.lock_until && new Date(user.lock_until) <= currentTime && user.login_attempts > 0) {
+				console.log(`Account ${user.email} was locked but time has passed. Resetting login attempts.`);
+				// update the current user's login attempts
+                await userModel.updateUserLoginAttempts(user.ssn, 0, null);
+                user.login_attempts = 0; // update the in-memory user object for the current request
+                user.lock_until = null;  // clear lock_until in memory
 			}
 
 			// step 3. compare the plain text password with the stored hashed password
@@ -132,7 +141,7 @@ const userModel = {
                 const lockDurationMinutes = 10;
 
 				// check if account should be locked (starts at 0 -> 4 = 5 attempts)
-				if (newAttempts > 4) {
+				if (newAttempts > 3) {
 					// lock for 10 minutes from now
 					newLockUntil = new Date(currentTime.getTime() + lockDurationMinutes * 60 * 1000);
 				}
@@ -140,7 +149,11 @@ const userModel = {
 				// try to update the current user's login attempts
 				await userModel.updateUserLoginAttempts(user.ssn, newAttempts, newLockUntil);
 				// return invalid credentials for no account
-				return { exists: false, message: 'Invalid credentials.' };
+				return { 
+					exists: false, 
+					message: 'Invalid credentials.',
+					login_attempts: newAttempts 
+				};
 			}
 		} catch (error) {
 			console.error('Error checking user credentials:', error);

@@ -19,6 +19,8 @@ const Homepage = () => {
     const [passwordError, setPasswordError] = useState('');
     // use state to hold the backend error message
     const [backendError, setBackendError] = useState('');
+    // use state to manage the number of login attempts left before account lockdown
+    const [attemptsLeft, setAttemptsLeft] = useState(null);
 
     // reference to the password input field
     const passwordInputRef = useRef(null);
@@ -80,19 +82,26 @@ const Homepage = () => {
                 if (response.status === 423) {
                     // account is locked
                     setBackendError(errorData.message || 'Account is temporarily locked due to too many failed attempts.');
-                } else if (response.status === 400) {
+                    setAttemptsLeft(null);
+                } else if (response.status === 401 || response.status === 400) {
                     // bad request, likely due to validation errors
                     setBackendError('Invalid input. Please check your email and password.');
                     setPassword(''); // reset password field
-                } else if (response.status === 401) {
-                    // unauthorized, likely due to incorrect credentials
-                    setBackendError('Invalid credentials. Please try again.');
-                    setPassword(''); // reset password field
+                    
+                    // calculate the number of login attempts left for current user
+                    const maxAttempts = 5;
+                    const remainingAttempts = maxAttempts - errorData.login_attempts;
+                    // make sure remaining attempts is not negative
+                    if (errorData.login_attempts !== undefined) {
+                        setAttemptsLeft(remainingAttempts > 0 ? remainingAttempts : 0); 
+                    } else {
+                        setAttemptsLeft(null);
+                    }
                 } else {
                     setBackendError(errorData.message || 'An unexpected error occurred. Please try again later.');
                     console.error('Login API error:', errorData);
                 }
-                passwordInputRef.current.focus(); // Focus password field for convenience on error
+                passwordInputRef.current.focus(); // focus password field for convenience on error
                 return;
             }
 
@@ -156,6 +165,11 @@ const Homepage = () => {
             />
             {passwordError && <p className="input-error-message">{passwordError}</p>}
             {backendError && <p className="input-error-message">{backendError}</p>}
+            {attemptsLeft !== null && attemptsLeft > 0 && (
+                <p className="input-error-message">
+                    You have {attemptsLeft} login attempt(s) remaining before your account will be temporarily locked.
+                </p>
+            )}
             <button type="submit">Enter</button>
             <p className="join-wcu" onClick={() => handleNavigation('/sign_up')}>Join WCU</p>
             </form>
