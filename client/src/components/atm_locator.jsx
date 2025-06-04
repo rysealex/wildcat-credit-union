@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { APIProvider, Map, AdvancedMarker, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import '../index.css';
 import { InfoWindow } from '@vis.gl/react-google-maps';
@@ -248,8 +249,11 @@ const AtmLocator = () => {
 		}
 	};
 
+	//navigation function
+	const navigate = useNavigate();
+	const handleGoBack = () => { navigate('/dashboard');};
 	return (
-		<div style={{ height: '500px', width: '100%' }}>
+		<div style={{ height: '600px', width: '57%', margin: '100px auto' }}>
 			{geolocationError && (
 				<div style={{ color: 'red' }}>
 					Error fetching geolocation: {geolocationError}
@@ -315,7 +319,31 @@ const AtmLocator = () => {
 					)}
 				</Map>
 			</APIProvider>
+
+			{/* Button to go back to the dashboard*/}
+			<button onClick={handleGoBack} className='nav-button'>
+				Back to Dashboard
+			</button>
 			
+			{/* List of Nearby Branches*/}
+			<div className='nearby-branches-list'>
+				<h1>Ellensburg Campus ATM Locations</h1>
+				{atmMarkers.map((atmMarker, index) => (
+					<div key={index} className= 'atmMarker-item'>
+						<h3>{atmMarker.name}</h3>
+							<p>Hours of Operation: {atmMarker.hours}</p>
+							<p>{atmMarker.address}</p>
+							
+					</div>
+				))}
+			
+			</div>
+			
+			
+			
+				
+			
+
 			{directionsData && selectedAtmMarker && (
 				<div>
 					<h4>Directions to {selectedAtmMarker?.name}:</h4>

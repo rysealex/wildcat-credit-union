@@ -373,6 +373,120 @@ button:hover {
   color: green;
   font-size: 12px;
   margin: auto;
+} 
+
+.nav-button{
+  
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  z-index: 1000;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--crimson);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+}
+
+.nearby-branches-list {
+  flex: 1;
+  min-width: 250px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  overflow-y: auto;
+}
+
+.nearby-branches-list h1 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  color: #333;
+}
+
+
+/* Dep and Withdraw*/
+
+.form-toggle-buttons{
+  margin: bottom 20px;
+  margin-top: 100px;
+  margin-left: 20%;
+  display: flex;
+  gap: 0px;
+
+}
+
+.form-toggle-buttons-stacked button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: var(--crimson);
+  color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-toggle-buttons.active-button {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+form-container {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.form-container h2 {
+  margin: top 0;
+  color:#333;
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.deposit-withdrawal-main-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 60px;
+  border: 1px solid #e0e0e0;
+  background-color: var(--grey-light);
+  min-height: 500px;
+}
+
+.form-toggle-buttons-stacked {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding-top: 0px;
+  
+}
+
+.form-content-area-centered {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.content-wrapper-with-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0px;
+  flex: 2;
+=======
 }
 .error-message {
   color: red;
