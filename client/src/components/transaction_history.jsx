@@ -63,33 +63,35 @@ import { FaHistory } from 'react-icons/fa';
 
 		return (
 			<div>
-				<h2>Transaction History</h2>
-				<table>
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Type</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						{transactionHistory.map((transaction, index) => (
-							<tr key={index}>
-								<td>
-									{formatDate(transaction.date)}
-								</td>
-								<td>
-									{transaction.transaction_type}
-								</td>
-								<td>
-									{getAmountDisplay(
-										transaction.transaction_type, transaction.transaction_amount
-									)}
-								</td>
+				<h2 style={{ textAlign: 'center' }}>Transaction History</h2>
+				<div className='transaction-history-scroll-box'>
+					<table>
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Type</th>
+								<th>Amount</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{transactionHistory.map((transaction, index) => (
+								<tr key={index}>
+									<td>
+										{formatDate(transaction.date)}
+									</td>
+									<td>
+										{transaction.transaction_type}
+									</td>
+									<td>
+										{getAmountDisplay(
+											transaction.transaction_type, transaction.transaction_amount
+										)}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		);
 	};
