@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Withdrawal = () => {
+const Withdrawal = ({ onTransactionSuccess }) => {
     // use state to manage withdrawal amount and success message
     const [withdrawalAmount, setWithdrawalAmount] = useState('');
     // use state to manage the success message
@@ -16,6 +16,10 @@ const Withdrawal = () => {
     // handle the withdrawal form submission
     const handleWithdrawal = async (e) => {
         e.preventDefault();
+
+        // clear previous messages
+        setSuccessMessage('');
+        setErrorMessage('');
 
         // prevent input/clicks while processing
         if (isProcessing) {
@@ -56,7 +60,25 @@ const Withdrawal = () => {
         };
 
         try {
-            // step 1: add transaction to transaction history
+            // step 1. check if the current user can perform the withdrawal (check against daily limits)
+			const withdrawalLimitsResponse = await fetch(
+				`http://localhost:5000/api/transaction_history/check-withdrawal-limits/${currUserSsn}/${withdrawalAmount}`);
+				// check for API response
+				if (!withdrawalLimitsResponse.ok) {
+					const errorData = await withdrawalLimitsResponse.json();
+                	throw new Error(errorData.message || 'Failed to verify withdrawal limits.');
+            	}
+				
+				// get the result from the API response
+				const checkResult = await withdrawalLimitsResponse.json();
+				if (!checkResult.allowed) {
+					// if the check returns false, display the message from the backend
+					setErrorMessage(checkResult.message);
+					setIsProcessing(false);
+					return; // stop withdrawal from proceeding
+            	}
+
+            // step 2: add transaction to transaction history
             const transactionResponse = await fetch('http://localhost:5000/api/transaction_history', {
                 method: 'POST',
                 headers: {
@@ -68,7 +90,7 @@ const Withdrawal = () => {
                 throw new Error('Failed to withdraw amount');
             }
 
-            // step 2: update bank account balance
+            // step 3: update bank account balance
             const bankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${transactionData.ssn}/subtract_funds`, {
                 method: 'POST',
                 headers: {
@@ -84,6 +106,10 @@ const Withdrawal = () => {
             }
             // show success message
             setSuccessMessage(`Successfully withdrew $${transactionData.transaction_amount}!`);
+            // call the callback to update the balance in the parent
+			if (onTransactionSuccess) {
+                onTransactionSuccess();
+            }
             // reset the withdrawal form after 5 seconds
             setTimeout(() => {
                 // clear the withdrawal amount input field
@@ -104,9 +130,9 @@ const Withdrawal = () => {
 
     return (
         <div>
-			<h2>Withdraw Money</h2>
+			<h2 style={{ textAlign: 'center' }}>Withdraw Funds</h2>
 			<form onSubmit={handleWithdrawal}>
-				<label htmlFor="withdrawalAmount">Amount to Withdraw:</label>
+				<label htmlFor="withdrawalAmount" style={{ textAlign: 'center' }}>Amount to Withdraw:</label>
 				<input
 					type="number"
                     min='1.00'
@@ -119,7 +145,11 @@ const Withdrawal = () => {
                     ref={withdrawalAmountInputRef}
                     disabled={isProcessing}
 				/>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage && <p 
+                    className="error-message" 
+                >
+                    {errorMessage}
+                </p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
 				<button type="submit" disabled={isProcessing}>Withdraw</button>
 			</form>

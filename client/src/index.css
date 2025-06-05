@@ -450,21 +450,6 @@ form-container {
   margin-bottom: 15px;
 }
 
-.deposit-withdrawal-main-layout {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
-  width: 90%;
-  max-width: 1200px;
-  margin: 100px auto;
-  padding: 60px;
-  border: 1px solid #e0e0e0;
-  background-color: var(--grey-light);
-  min-height: 500px;
-}
-
 .form-toggle-buttons-stacked {
   display: flex;
   flex-direction: column;
@@ -486,4 +471,144 @@ form-container {
   align-items: flex-start;
   gap: 0px;
   flex: 2;
+}
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin: auto;
+}
+
+.amount-positive {
+  color: green;
+}
+.amount-negative {
+  color: red;
+}
+
+.transaction-history-scroll-box {
+    max-height: 200px; 
+    max-width: 600px;
+    width: 100%;
+    overflow-y: auto;
+    border: 1px solid var(--grey-border); 
+    border-radius: 8px; 
+    background-color: var(--grey-light); 
+    padding: 15px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+    margin-top: 1.5rem; 
+}
+
+.transaction-history-scroll-box table {
+    width: 100%;
+    border-collapse: collapse; 
+    font-size: 0.95rem;
+    color: var(--text); 
+}
+
+.transaction-history-scroll-box th,
+.transaction-history-scroll-box td {
+    padding: 12px 60px; 
+    text-align: left;
+    border-bottom: 1px solid var(--grey-border); 
+}
+
+.transaction-history-scroll-box th {
+    background-color: var(--crimson); 
+    color: var(--white); 
+    font-weight: 600; 
+    position: sticky; 
+    top: 0; 
+    z-index: 1; 
+}
+
+.transaction-history-scroll-box tbody tr:last-child td {
+    border-bottom: none; 
+}
+
+.transaction-history-scroll-box tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02); 
+}
+
+.deposit-withdrawal-main-layout {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 2rem;
+}
+
+.header-row {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 2rem;
+}
+
+
+.toggle-buttons {
+	display: flex;
+	gap: 1rem;
+}
+
+
+.content-row {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 2rem;
+	width: 100%;
+}
+
+.form-box {
+  margin-left: 100px;
+  margin-top: 70px;
+	width: 100%;
+	max-width: 500px;
+	border: 1px solid #ddd;
+	padding: 2rem;
+	border-radius: 10px;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.deposit-withdrawal-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.transfer-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+  width: 100%;
+  align-items: center;
+}
+
+.recipient-search-buttons {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+
+.balance-box {
+  margin-top: 70px;
+  margin-left: 20px;
+	border: 1px solid #ddd;
+	padding: 1.5rem;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	min-width: 200px;
+	text-align: center;
+}
+
+.balance-box h2 {
+	margin-bottom: 0.5rem;
+	color: #333;
+}
+
+.balance-box p {
+	font-size: 1.5rem;
+	color: #28a745;
+	font-weight: bold;
 }
