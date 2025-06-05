@@ -378,8 +378,8 @@ button:hover {
 .nav-button{
   
   position: fixed;
-  top: 100px;
-  left: 20px;
+  top: 85px;
+  left: 55px;
   z-index: 1000;
   font-size: 1rem;
   font-weight: 600;
@@ -410,31 +410,6 @@ button:hover {
 
 /* Dep and Withdraw*/
 
-.form-toggle-buttons{
-  margin: bottom 20px;
-  margin-top: 100px;
-  margin-left: 20%;
-  display: flex;
-  gap: 0px;
-
-}
-
-.form-toggle-buttons-stacked button {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: var(--crimson);
-  color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.form-toggle-buttons.active-button {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
 
 form-container {
   border: 1px solid #ddd;
@@ -450,13 +425,7 @@ form-container {
   margin-bottom: 15px;
 }
 
-.form-toggle-buttons-stacked {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  padding-top: 0px;
-  
-}
+
 
 .form-content-area-centered {
   flex-grow: 1;
@@ -529,24 +498,22 @@ form-container {
     background-color: rgba(0, 0, 0, 0.02); 
 }
 
-.deposit-withdrawal-main-layout {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 2rem;
-}
+
 
 .header-row {
 	width: 100%;
 	display: flex;
 	align-items: center;
 	gap: 1rem;
-	margin-bottom: 2rem;
+	margin-bottom: 0rem;
+  margin-left: 1;
 }
 
 
 .toggle-buttons {
 	display: flex;
+  margin-top: 75px;
+  margin-left: 45px;
 	gap: 0.5rem;
 }
 
@@ -559,33 +526,20 @@ form-container {
 	width: 100%;
 }
 
-.form-box {
-  margin-left: 100px;
-  margin-top: 70px;
-	width: 100%;
-	max-width: 500px;
-	border: 1px solid #ddd;
-	padding: 2rem;
-	border-radius: 10px;
-	background-color: #f9f9f9;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
-.deposit-withdrawal-input {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
+
 
 .balance-box {
-  margin-top: 70px;
+  margin-top: -155px;
   margin-left: 20px;
 	border: 1px solid #ddd;
 	padding: 1.5rem;
 	border-radius: 10px;
 	background-color: #fff;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-	min-width: 200px;
+	min-width: 400px;
+  height: 125px;
 	text-align: center;
 }
 
@@ -595,6 +549,86 @@ form-container {
 }
 
 .balance-box p {
+	font-size: 1.5rem;
+	color: #28a745;
+	font-weight: bold;
+}
+
+.form-box2 {
+  margin-left: 300px;
+  margin-top: -190px;
+	width: 100%;
+  height: 800px;
+	max-width: 700px;
+	border: 1px solid #ddd;
+	padding: 1em;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  
+}
+
+transactionform {
+  margin-top: 400px;
+  margin-left: 175px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  max-width: 352px;
+  background-color: #fff;
+  
+ 
+}
+
+.header2 {
+  color:#333;
+  text-align: center;
+  margin: 0px 0;
+  padding: 15px;
+  background-color: var(--grey-light);
+
+}
+/*Deposit / Withdrawal styling*/
+.header3 {
+  color:#333;
+  text-align: center;
+  margin: 0px 0px;
+  width: 100%;
+  padding: 15px;
+  background-color: var(--grey-light);
+}
+
+.formbox-dep-with{
+  margin-left: 300px;
+  margin-top: -105px;
+	width: 100%;
+  height: 800px;
+	max-width: 700px;
+	border: 1px solid #ddd;
+	padding: 1em;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  
+}
+
+.dep-with-balance {
+  margin-top: -50px;
+  margin-left: 20px;
+	border: 1px solid #ddd;
+	padding: 1.5rem;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	min-width: 400px;
+  height: 125px;
+	text-align: center;
+}
+
+.dep-with-balance p {
 	font-size: 1.5rem;
 	color: #28a745;
 	font-weight: bold;

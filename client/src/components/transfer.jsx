@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const Transfer = () => {
     // use state for the transfer amount and is found recipient
     const [transferAmount, setTransferAmount] = useState('');
@@ -21,6 +21,11 @@ const Transfer = () => {
     // reference to the phone number and transfer amount input fields
     const phoneNumberInputRef = useRef(null);
     const transferAmountInputRef = useRef(null);
+
+     //navigation function
+	const navigate = useNavigate();
+	const handleGoBack = () => { navigate('/dashboard');};
+
 
     // function to handle phone number formatting
 	const handlePhoneNumberChange = (e) => {
@@ -270,8 +275,15 @@ const Transfer = () => {
 
     return (
         <div>
-            <h2>Transfer Funds</h2>
-            <form onSubmit={handleSearch}>
+            
+            <h1 className='header2'>Transfer Funds</h1>
+            <h4 style={{width:'200px', marginTop: '125px', marginLeft: '55px'}}>Make instant transfers between WCU account holders, never any fees!</h4>
+            <div className='content-row'>
+                 <button  onClick={handleGoBack} className="nav-button">Back to Dashboard</button>
+                 
+                <div className='form-box2'>
+                    <transactionform onSubmit={handleSearch}>
+                
                 <label>
                     Recipient Phone Number:
                     <input 
@@ -292,10 +304,10 @@ const Transfer = () => {
                         Cancel
                     </button>
                 )}
-            </form>
+            </transactionform>
 
             {isRecipientFound && (
-                <form onSubmit={handleTransfer}>
+                <transactionform onSubmit={handleTransfer}>
                     <label>
                         Transfer Amount:
                         <input 
@@ -312,8 +324,16 @@ const Transfer = () => {
                     </label>
                     {transferSuccessMessage && <p className="success-message">{transferSuccessMessage}</p>}
                     <button type="submit" disabled={isProcessing}>Transfer</button>
-                </form>
+                </transactionform>
             )}
+                </div>
+                <div className="balance-box">
+					<h2>Current Balance</h2>
+					<p>$3,200.00</p> {/* Replace with real data later */}
+				</div>
+                
+                
+            </div>
         </div>   
     )
 };

@@ -20,10 +20,12 @@ const Deposit_and_withdrawal = () => {
 	const handleGoBack = () => { navigate('/dashboard');};
 
     return (
-        <div className="deposit-withdrawal-main-layout">
+		
+        <div >
 			{/* Header */}
-			<div className="header-row">
-				<button onClick={handleGoBack} className="back-button">Back to Dashboard</button>
+			<h1 className='header3'>Make a Deposit or Withdraw</h1>
+			<div >
+				<button onClick={handleGoBack} className="nav-button">Back to Dashboard</button>
 				<div className="toggle-buttons">
 					<button
 						onClick={handleViewDep}
@@ -42,14 +44,14 @@ const Deposit_and_withdrawal = () => {
 
 			{/* Main Content Row */}
 			<div className="content-row">
-				<div className="form-box">
+				<div className="formbox-dep-with">
                     <div className='deposit-withdrawal-input'>
                         {activeForm === 'deposit' && <Deposit />}
 					    {activeForm === 'withdrawal' && <Withdrawal />} 
                     </div>
 				</div>
 
-				<div className="balance-box">
+				<div className="dep-with-balance">
 					<h2>Current Balance</h2>
 					<p>$3,200.00</p> {/* Replace with real data later */}
 				</div>

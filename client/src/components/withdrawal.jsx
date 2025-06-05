@@ -127,7 +127,7 @@ const Withdrawal = () => {
     return (
         <div>
 			<h2 style={{ textAlign: 'center' }}>Withdraw Funds</h2>
-			<form onSubmit={handleWithdrawal}>
+			<transactionform onSubmit={handleWithdrawal}>
 				<label htmlFor="withdrawalAmount" style={{ textAlign: 'center' }}>Amount to Withdraw:</label>
 				<input
 					type="number"
@@ -148,7 +148,7 @@ const Withdrawal = () => {
                 </p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
 				<button type="submit" disabled={isProcessing}>Withdraw</button>
-			</form>
+			</transactionform>
 		</div>
     )
 };
