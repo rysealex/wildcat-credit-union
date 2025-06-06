@@ -201,7 +201,6 @@ const SignUp = () => {
 			}
 
 			const data = await response.json();
-			console.log('User added successfully:', data);
 			// navigate to the home page (log back into account) after successful registration
 			handleNavigation('/');
 		} catch (error) {

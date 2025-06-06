@@ -28,7 +28,6 @@ const Transfer = () => {
 
     // get the current user's ssn from local storage
     const ssnFromStorage = localStorage.getItem('curr_user_ssn');
-        console.log(ssnFromStorage);
         if (!ssnFromStorage) {
             console.error('No user SSN found in local storage');
             return;
@@ -128,7 +127,6 @@ const Transfer = () => {
 
         // fetch the user by phone number
         const response = await fetch(`http://localhost:5000/api/users/phone_number/${rawPhoneNumber}`);
-        console.log('searching for user by phone number:', rawPhoneNumber);
 
         if (!response.ok) {
             console.error('Failed to fetch user by phone number');

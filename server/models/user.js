@@ -14,10 +14,8 @@ const userModel = {
 	},
 	// function to get user by ssn
 	getUserBySSN: async (ssn) => {
-		console.log('user model getUserBySSN called with:', ssn);
 		try {
 			const [rows, fields] = await pool.query('SELECT * FROM user WHERE ssn = ?', [ssn]);
-			console.log("userModel: Query result for ssn:", rows);
 			return rows.length > 0 ? rows[0] : null;
 		} catch (error) {
 			console.error('Error fetching user by ssn:', error);
@@ -26,10 +24,8 @@ const userModel = {
 	},
 	// function to get user by phone number
 	getUserByPhoneNumber: async (phoneNumber) => {
-		console.log('user model getUserByPhoneNumber called with:', phoneNumber);
 		try {
 			const [rows, fields] = await pool.query('SELECT * FROM user WHERE phone_number = ?', [phoneNumber]);
-			console.log("userModel: Query result for phone number:", rows);
 			return rows.length > 0 ? rows[0] : null;
 		} catch (error) {
 			console.error('Error fetching user by phone number:', error);
@@ -116,7 +112,6 @@ const userModel = {
 
 			// check if the lockdown time has already passed
 			if (user.lock_until && new Date(user.lock_until) <= currentTime && user.login_attempts > 0) {
-				console.log(`Account ${user.email} was locked but time has passed. Resetting login attempts.`);
 				// update the current user's login attempts
                 await userModel.updateUserLoginAttempts(user.ssn, 0, null);
                 user.login_attempts = 0; // update the in-memory user object for the current request

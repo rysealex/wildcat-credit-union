@@ -13,7 +13,6 @@ const Deposit_and_withdrawal = () => {
 
 		// get the current user's ssn from local storage
 		const ssnFromStorage = localStorage.getItem('curr_user_ssn');
-		console.log(ssnFromStorage);
 		if (!ssnFromStorage) {
 			console.error('No user SSN found in local storage');
 			return;

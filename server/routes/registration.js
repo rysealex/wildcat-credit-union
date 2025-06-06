@@ -23,10 +23,8 @@ router.post('/registration', async (req, res) => {
 			ssn: userData.ssn, // use the ssn from user data
 			balance: 500.00 // default balance set to 500.00
 		});
-		console.log('New bank account created:', newBankAccount);
 		// step 2: if bank account creation is success, then create the user record
 		const newUser = await userModel.addUser(userData);
-		console.log('New user created:', newUser);
 
 		// step 3: if user creation is success, add a welcome transaction ($500.00) to the bank account
 		const welcomeTransaction = {
@@ -37,7 +35,6 @@ router.post('/registration', async (req, res) => {
 		};
 		// call the addTransaction method from transactionModel
         const welcomeTransactionResult = await transactionModel.addTransaction(welcomeTransaction);
-		console.log('Welcome transaction added:', welcomeTransactionResult);
 		
 		res.status(201).json({
 			message: 'User registered successfully',
