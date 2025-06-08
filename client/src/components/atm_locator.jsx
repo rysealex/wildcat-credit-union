@@ -257,91 +257,91 @@ const AtmLocator = () => {
 		<div>
 			<h1 className='header2'>ATM Locator</h1>
 			<div style={{ height: '850px', width: '70%', margin: ' auto' }}>
-			{geolocationError && (
-				<div style={{ color: 'red' }}>
-					Error fetching geolocation: {geolocationError}
-				</div>
-			)}
-			<APIProvider apiKey={process.env.REACT_APP_Maps_API_KEY}>
-				<Map
-					defaultCenter={userPosition || mapPosition}
-					defaultZoom={15}
-					mapId={process.env.REACT_APP_Maps_MAP_ID}
-				>
-					{userPosition && (
-						<AdvancedMarker
-							position={userPosition}
-							title="Your Current Location"
-						>
-							<div className="user-location-dot" />
-						</AdvancedMarker>
-					)}
+				{geolocationError && (
+					<div style={{ color: 'red' }}>
+						Error fetching geolocation: {geolocationError}
+					</div>
+				)}
+				<APIProvider apiKey={process.env.REACT_APP_Maps_API_KEY}>
+					<Map
+						defaultCenter={userPosition || mapPosition}
+						defaultZoom={15}
+						mapId={process.env.REACT_APP_Maps_MAP_ID}
+					>
+						{userPosition && (
+							<AdvancedMarker
+								position={userPosition}
+								title="Your Current Location"
+							>
+								<div className="user-location-dot" />
+							</AdvancedMarker>
+						)}
 
-					{atmMarkers.map(marker => (
-						<AdvancedMarker
-							key={marker.id}
-							position={marker.position}
-							title={`${marker.name}`}
-							onClick={() => handleAtmMarkerClick(marker.id)}
-						>
-							<img 
-								src={ATM_LOGO_URL}
-								alt='WCU ATM Logo'
-								className='atm-marker-icon'
-							/>
-						</AdvancedMarker>
-					))}
+						{atmMarkers.map(marker => (
+							<AdvancedMarker
+								key={marker.id}
+								position={marker.position}
+								title={`${marker.name}`}
+								onClick={() => handleAtmMarkerClick(marker.id)}
+							>
+								<img 
+									src={ATM_LOGO_URL}
+									alt='WCU ATM Logo'
+									className='atm-marker-icon'
+								/>
+							</AdvancedMarker>
+						))}
 
-					{selectedAtmMarker && (
-						<InfoWindow
-							position={adjustedPosition}
-							onCloseClick={handleAtmMarkerClose}
-						>
-							<div className="atm-info-window">
-								<div className='atm-info-header'>
-									<h3 className="atm-info-title">{selectedAtmMarker.name}</h3>
+						{selectedAtmMarker && (
+							<InfoWindow
+								position={adjustedPosition}
+								onCloseClick={handleAtmMarkerClose}
+							>
+								<div className="atm-info-window">
+									<div className='atm-info-header'>
+										<h3 className="atm-info-title">{selectedAtmMarker.name}</h3>
+									</div>
+									<p>Hours: {selectedAtmMarker.hours}</p>
+									<p>Details: {selectedAtmMarker.details}</p>
+									<p>Address: {selectedAtmMarker.address}</p>
+									<button 
+										className='get-directions-button' 
+										onClick={handleGetDirections}>
+											<FaMapLocationDot /> Get Directions
+									</button>
 								</div>
-								<p>Hours: {selectedAtmMarker.hours}</p>
-								<p>Details: {selectedAtmMarker.details}</p>
-								<p>Address: {selectedAtmMarker.address}</p>
-								<button 
-									className='get-directions-button' 
-									onClick={handleGetDirections}>
-										<FaMapLocationDot /> Get Directions
-								</button>
-							</div>
-						</InfoWindow>
-					)}
+							</InfoWindow>
+						)}
 
-					{showMapDirections && memoizedOrigin && memoizedDestination && (
-						<DirectionsComponent 
-							origin={memoizedOrigin}
-							destination={memoizedDestination}
-							setDirectionsResult={setDirectionsData}
-						/>
-					)}
-				</Map>
-			</APIProvider>
+						{showMapDirections && memoizedOrigin && memoizedDestination && (
+							<DirectionsComponent 
+								origin={memoizedOrigin}
+								destination={memoizedDestination}
+								setDirectionsResult={setDirectionsData}
+							/>
+						)}
+					</Map>
+				</APIProvider>
 
-			{/* Button to go back to the dashboard*/}
-			<button onClick={handleGoBack} className='nav-button'>
-				Back to Dashboard
-			</button>
-			<div style={{ marginLeft: '-280px', marginTop: '-750px', width: '275px', textAlign: 'center'}}>
-				<h4>Select an ATM location to view turn-by-turn directions.</h4>
-				</div>		
-			{directionsData && selectedAtmMarker && (
-				<div>
-					<h4 >Directions to {selectedAtmMarker?.name}:</h4>
-					{directionsData.routes[0]?.legs[0]?.steps.map((step, index) => (
-						<p key={index} dangerouslySetInnerHTML={{ __html: step.instructions }} />
-					))}
-					<p><b>Total Distance: {directionsData.routes[0]?.legs[0]?.distance?.text}</b></p>
-					<p><b>Total Duration: {directionsData.routes[0]?.legs[0]?.duration?.text}</b></p>
+				{/* Button to go back to the dashboard*/}
+				<button onClick={handleGoBack} className='nav-button'>
+					Back to Dashboard
+				</button>
+				<div style={{ marginLeft: '-200px', marginTop: '-750px', width: '200px', textAlign: 'center'}}>
+					<h4>Select an ATM location to view turn-by-turn directions.</h4>
+						
+					{directionsData && selectedAtmMarker && (
+						<div>
+							<h4 >Directions to {selectedAtmMarker?.name}:</h4>
+							{directionsData.routes[0]?.legs[0]?.steps.map((step, index) => (
+								<p key={index} dangerouslySetInnerHTML={{ __html: step.instructions }} />
+							))}
+							<p><b>Total Distance: {directionsData.routes[0]?.legs[0]?.distance?.text}</b></p>
+							<p><b>Total Duration: {directionsData.routes[0]?.legs[0]?.duration?.text}</b></p>
+						</div>
+					)}
 				</div>
-			)}
-		</div>
-		
+			</div>
 		</div>
 	);
 };
