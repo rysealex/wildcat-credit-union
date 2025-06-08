@@ -56,7 +56,7 @@ const Transfer = () => {
     const phoneNumberInputRef = useRef(null);
     const transferAmountInputRef = useRef(null);
 
-  //navigation function
+    //navigation function
 	const navigate = useNavigate();
 	const handleGoBack = () => { navigate('/dashboard');};
 
@@ -313,64 +313,60 @@ const Transfer = () => {
 
     return (
         <div>
-            
             <h1 className='header2'>Transfer Funds</h1>
             <h4 style={{width:'200px', marginTop: '125px', marginLeft: '55px'}}>Make instant transfers between WCU account holders, never any fees!</h4>
             <div className='content-row'>
-                 <button  onClick={handleGoBack} className="nav-button">Back to Dashboard</button>
-                 
+                <button  onClick={handleGoBack} className="nav-button">Back to Dashboard</button>
                 <div className='form-box2'>
-                    <transactionform onSubmit={handleSearch}>
-                
-                <label>
-                    Recipient Phone Number:
-                    <input 
-                        type="text" 
-                        value={displayPhoneNumber} 
-						onChange={handlePhoneNumberChange} 
-						onBlur={validatePhoneNumber} 
-                        required 
-                        ref={phoneNumberInputRef}
-                        disabled={isRecipientFound}
-                    />
-                    {phoneNumberError && <p className="input-error-message">{phoneNumberError}</p>}
-                    {phoneNumberSuccessMessage && <p className="success-message">{phoneNumberSuccessMessage}</p>}
-                </label>
-                <button type="submit" disabled={isRecipientFound}>Search</button>
-                {isRecipientFound && !isProcessing && ( 
-                    <button type="button" onClick={handleCancelSearch} className="cancel-button">
-                        Cancel
-                    </button>
-                )}
-            </transactionform>
+                    <form onSubmit={handleSearch}>
+                        <label>
+                            Recipient Phone Number:
+                            <input 
+                                type="text" 
+                                value={displayPhoneNumber} 
+                                onChange={handlePhoneNumberChange} 
+                                onBlur={validatePhoneNumber} 
+                                required 
+                                ref={phoneNumberInputRef}
+                                disabled={isRecipientFound}
+                            />
+                            {phoneNumberError && <p className="input-error-message">{phoneNumberError}</p>}
+                            {phoneNumberSuccessMessage && <p className="success-message">{phoneNumberSuccessMessage}</p>}
+                        </label>
+                        <button type="submit" disabled={isRecipientFound}>Search</button>
+                        {isRecipientFound && !isProcessing && ( 
+                            <button type="button" onClick={handleCancelSearch} className="cancel-button">
+                                Cancel
+                            </button>
+                        )}
+                    </form>
 
-            {isRecipientFound && (
-                <transactionform onSubmit={handleTransfer}>
-                    <label>
-                        Transfer Amount:
-                        <input 
-                            type="number" 
-                            min='1.00'
-                            max='500.00'
-                            step='0.01'
-                            value={transferAmount} 
-                            onChange={(e) => setTransferAmount(e.target.value)} 
-                            required 
-                            ref={transferAmountInputRef}
-                            disabled={isProcessing}
-                        />
-                    </label>
-                    {transferSuccessMessage && <p className="success-message">{transferSuccessMessage}</p>}
-                    <button type="submit" disabled={isProcessing}>Transfer</button>
-                </transactionform>
-            )}
+                    {isRecipientFound && (
+                        <form onSubmit={handleTransfer}>
+                            <label>
+                                Transfer Amount:
+                                <input 
+                                    type="number" 
+                                    min='1.00'
+                                    max='500.00'
+                                    step='0.01'
+                                    value={transferAmount} 
+                                    onChange={(e) => setTransferAmount(e.target.value)} 
+                                    required 
+                                    ref={transferAmountInputRef}
+                                    disabled={isProcessing}
+                                />
+                            </label>
+                            {transferError && <p className="input-error-message">{transferError}</p>}
+                            {transferSuccessMessage && <p className="success-message">{transferSuccessMessage}</p>}
+                            <button type="submit" disabled={isProcessing}>Transfer</button>
+                        </form>
+                    )}
                 </div>
                 <div className="balance-box">
-					<h2>Current Balance</h2>
-					<p>$3,200.00</p> {/* Replace with real data later */}
-				</div>
-                
-                
+                    <h2>Current Balance</h2>
+                    <p>${balance}</p>
+                </div>  
             </div>
         </div>   
     )

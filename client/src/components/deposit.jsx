@@ -111,7 +111,7 @@ const Deposit = ({ onTransactionSuccess }) => {
 	return (
 		<div >
 			<h2 style={{ textAlign: 'center' }}>Deposit Funds</h2>
-			<transactionform onSubmit={handleDeposit}>
+			<form onSubmit={handleDeposit}>
 				<label htmlFor="depositAmount" style={{ textAlign: 'center' }}>Amount to Deposit:</label>
 				<input
 					type="number"
@@ -132,7 +132,7 @@ const Deposit = ({ onTransactionSuccess }) => {
 				</p>}
 				{successMessage && <p className="success-message">{successMessage}</p>}
 				<button type="submit" disabled={isProcessing}>Deposit</button>
-			</transactionform>
+			</form>
 		</div>
 	);
 
