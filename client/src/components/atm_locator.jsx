@@ -253,7 +253,10 @@ const AtmLocator = () => {
 	const navigate = useNavigate();
 	const handleGoBack = () => { navigate('/dashboard');};
 	return (
-		<div style={{ height: '600px', width: '57%', margin: '100px auto' }}>
+		
+		<div>
+			<h1 className='header2'>ATM Locator</h1>
+			<div style={{ height: '850px', width: '70%', margin: ' auto' }}>
 			{geolocationError && (
 				<div style={{ color: 'red' }}>
 					Error fetching geolocation: {geolocationError}
@@ -324,10 +327,12 @@ const AtmLocator = () => {
 			<button onClick={handleGoBack} className='nav-button'>
 				Back to Dashboard
 			</button>
-
+			<div style={{ marginLeft: '-280px', marginTop: '-750px', width: '275px', textAlign: 'center'}}>
+				<h4>Select an ATM location to view turn-by-turn directions.</h4>
+				</div>		
 			{directionsData && selectedAtmMarker && (
 				<div>
-					<h4>Directions to {selectedAtmMarker?.name}:</h4>
+					<h4 >Directions to {selectedAtmMarker?.name}:</h4>
 					{directionsData.routes[0]?.legs[0]?.steps.map((step, index) => (
 						<p key={index} dangerouslySetInnerHTML={{ __html: step.instructions }} />
 					))}
@@ -335,6 +340,8 @@ const AtmLocator = () => {
 					<p><b>Total Duration: {directionsData.routes[0]?.legs[0]?.duration?.text}</b></p>
 				</div>
 			)}
+		</div>
+		
 		</div>
 	);
 };
