@@ -526,9 +526,24 @@ form-container {
 	width: 100%;
 }
 
+.deposit-withdrawal-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.transfer-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+  width: 100%;
+  align-items: center;
+}
 
-
-
+.recipient-search-buttons {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
 
 .balance-box {
   margin-top: -155px;

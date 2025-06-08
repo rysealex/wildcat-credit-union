@@ -8,7 +8,6 @@ router.get('/transaction_history/:ssn', async (req, res) => {
     try {
         // fetch all transactions for the user
         const transactions = await transactionHistoryModel.getAllTransactions(ssn);
-        console.log('Transactions fetched:', transactions);
         res.status(200).json(transactions);
     } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -22,7 +21,6 @@ router.post('/transaction_history', async (req, res) => {
     try {
         // add the new transaction
         const newTransactionId = await transactionHistoryModel.addTransaction(transactionDetails);
-        console.log('New transaction added with ID:', newTransactionId);
         res.status(201).json({ id: newTransactionId });
     } catch (error) {
         console.error('Error adding transaction:', error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Deposit = () => {
+const Deposit = ({ onTransactionSuccess }) => {
 	// use state to manage deposit amount and success message
 	const [depositAmount, setDepositAmount] = useState('');
 	// use state to manage the success message
@@ -85,6 +85,10 @@ const Deposit = () => {
 			}
 			// show success message
 			setSuccessMessage(`Successfully deposited $${transactionData.transaction_amount}!`);
+			// call the callback to update the balance in the parent
+			if (onTransactionSuccess) {
+                onTransactionSuccess();
+            }
 			// reset the deposit form after 5 seconds
             setTimeout(() => {
 				// clear the deposit amount input field

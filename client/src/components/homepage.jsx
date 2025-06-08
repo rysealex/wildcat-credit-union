@@ -107,12 +107,9 @@ const Homepage = () => {
 
             // 3. parse the JSON response
             const data = await response.json();
-            console.log('Raw API Response Data:', data);
 
             // 4. check if the user exists
             if (data.exists) {
-                console.log('User exists, navigating to account info page.');
-        
                 // store the user's ssn in local storage for later use
                 localStorage.setItem('curr_user_ssn', data.ssn);
                 

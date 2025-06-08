@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Withdrawal = () => {
+const Withdrawal = ({ onTransactionSuccess }) => {
     // use state to manage withdrawal amount and success message
     const [withdrawalAmount, setWithdrawalAmount] = useState('');
     // use state to manage the success message
@@ -106,6 +106,10 @@ const Withdrawal = () => {
             }
             // show success message
             setSuccessMessage(`Successfully withdrew $${transactionData.transaction_amount}!`);
+            // call the callback to update the balance in the parent
+			if (onTransactionSuccess) {
+                onTransactionSuccess();
+            }
             // reset the withdrawal form after 5 seconds
             setTimeout(() => {
                 // clear the withdrawal amount input field

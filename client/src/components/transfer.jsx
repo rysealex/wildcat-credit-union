@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 const Transfer = () => {
     // use state for the transfer amount and is found recipient
     const [transferAmount, setTransferAmount] = useState('');
@@ -10,6 +11,7 @@ const Transfer = () => {
     const [rawPhoneNumber, setRawPhoneNumber] = useState('');
     // use state to hold the input error messages
     const [phoneNumberError, setPhoneNumberError] = useState('');
+    const [transferError, setTransferError] = useState('');
 
     // use state for the transfer and phone number success messages
     const [transferSuccessMessage, setTransferSuccessMessage] = useState('');
@@ -18,14 +20,45 @@ const Transfer = () => {
     // use state to disable the transfer input/button during processing
     const [isProcessing, setIsProcessing] = useState(false);
 
+    // use state for the current user's bank account balance
+    const [balance, setBalance] = useState('');
+
+    // function to fetch the current user's bank account balance
+    const fetchUserBalance = useCallback(async () => {
+
+    // get the current user's ssn from local storage
+    const ssnFromStorage = localStorage.getItem('curr_user_ssn');
+        if (!ssnFromStorage) {
+            console.error('No user SSN found in local storage');
+            return;
+        }
+
+        try {
+            // step 1. fetch user bank account from bank_account route for the balance
+            const bankAccountResponse = await fetch(`http://localhost:5000/api/bank_accounts/${ssnFromStorage}`);
+            if (!bankAccountResponse.ok) {
+                throw new Error('Failed to fetch bank account information');
+            }
+            const bankAccountData = await bankAccountResponse.json();
+            // extract the user balance from the bank account data
+            setBalance(bankAccountData.balance);
+        } catch (error) {
+            console.error('Error fetching user bank account balance:', error);
+        }
+    }, []);
+
+    // useEffect to fetch the initial balance when the component mounts
+    useEffect(() => {
+        fetchUserBalance();
+    }, [fetchUserBalance]);
+
     // reference to the phone number and transfer amount input fields
     const phoneNumberInputRef = useRef(null);
     const transferAmountInputRef = useRef(null);
 
-     //navigation function
+  //navigation function
 	const navigate = useNavigate();
 	const handleGoBack = () => { navigate('/dashboard');};
-
 
     // function to handle phone number formatting
 	const handlePhoneNumberChange = (e) => {
@@ -64,6 +97,7 @@ const Transfer = () => {
         setDisplayPhoneNumber('');
         setRawPhoneNumber('');
         setPhoneNumberError('');
+        setTransferError('');
         setPhoneNumberSuccessMessage('');
         setTransferSuccessMessage('');
         setIsProcessing(false);
@@ -86,18 +120,21 @@ const Transfer = () => {
             setPhoneNumberError('You cannot transfer money to yourself. Please enter a different phone number.');
             // focus the phone number input field for user convenience
 			phoneNumberInputRef.current.focus();
+            // reset the display phone number input
+            setDisplayPhoneNumber('');
             return;
         }
 
         // fetch the user by phone number
         const response = await fetch(`http://localhost:5000/api/users/phone_number/${rawPhoneNumber}`);
-        console.log('searching for user by phone number:', rawPhoneNumber);
 
         if (!response.ok) {
             console.error('Failed to fetch user by phone number');
             setPhoneNumberError('User not found. Please check the phone number and try again.');
             // focus the phone number input field for user convenience
 			phoneNumberInputRef.current.focus();
+            // reset the display phone number input
+            setDisplayPhoneNumber('');
             // set recipient found state to false
             setIsRecipientFound(false);
             // clear success message for phone number
@@ -135,24 +172,22 @@ const Transfer = () => {
         const balanceResponse = await fetch(`http://localhost:5000/api/bank_accounts/${currUserSsn}`);
         if (!balanceResponse.ok) {
             console.error('Failed to fetch bank account balance');
-            alert('Failed to fetch bank account balance. Please try again later.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Failed to fetch bank account balance. Please try again later.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
         // parse the response to get the balance
         const balanceData = await balanceResponse.json();
         // check if the balance is sufficient for the transfer
         if (balanceData.balance < parseFloat(transferAmount)) {
-            alert('Insufficient balance for this transfer.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Insufficient balance for this transfer.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
-
-        console.log(transferAmount);
 
         // after confirming that user has enough balance for transfer, create the transaction object for the sender
         const senderTransactionData = {
@@ -161,8 +196,6 @@ const Transfer = () => {
             transaction_type: 'Transfer',
             transaction_amount: parseFloat(transferAmount),
         };
-
-        console.log(senderTransactionData);
 
         // step 1: send the transaction data to the server for the sender
         const transactionResponse = await fetch('http://localhost:5000/api/transaction_history', {
@@ -175,10 +208,10 @@ const Transfer = () => {
 
         if (!transactionResponse.ok) {
             console.error('Failed to create transaction');
-            alert('Failed to create transaction. Please try again later.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Failed to create transaction. Please try again later.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
 
@@ -198,10 +231,10 @@ const Transfer = () => {
 
         if (!bankAccountResponse.ok) {
             console.error('Failed to update bank account balance');
-            alert('Failed to update bank account balance. Please try again later.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Failed to update bank account balance. Please try again later.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
 
@@ -225,10 +258,10 @@ const Transfer = () => {
 
         if (!recipientTransactionResponse.ok) {
             console.error('Failed to create transaction');
-            alert('Failed to create transaction. Please try again later.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Failed to create transaction. Please try again later.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
 
@@ -248,16 +281,18 @@ const Transfer = () => {
 
         if (!recipientBankAccountResponse.ok) {
             console.error('Failed to update recipient bank account balance');
-            alert('Failed to update recipient bank account balance. Please try again later.');
-            // focus the transfer amount input field for user convenience
-			transferAmountInputRef.current.focus();
-            setIsProcessing(false);
+            setTransferError('Failed to update recipient bank account balance. Please try again later.');
+            setTransferAmount('');
+            setIsProcessing(false); // enable the input
+            setTimeout(() => transferAmountInputRef.current?.focus(), 0);
             return;
         }
 
         //alert('Bank account balance updated successfully for the recipient!');
         // show success message
         setTransferSuccessMessage(`Successfully transferred $${transferAmount} to ${displayPhoneNumber}`);
+        // call fetch user balance to dynamically update the user's current balance 
+        fetchUserBalance();
         // reset the recipient found state after 5 seconds
         setTimeout(() => {
             setIsRecipientFound(false);
@@ -268,6 +303,9 @@ const Transfer = () => {
             // clear the success messages
             setPhoneNumberSuccessMessage('');
             setTransferSuccessMessage('');
+            // clear the error messages
+            setPhoneNumberError('');
+            setTransferError('');
             // reset processing state
             setIsProcessing(false);
         }, 5000);
