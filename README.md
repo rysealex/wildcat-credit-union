@@ -1,7 +1,5 @@
 # 🏦 Wildcat Credit Union Banking Web Application
 
-<img src="./client/public/wcu.png" alt="WCU Logo" width="300"/>
-
 ## 📄 Overview
 **Wildcat Credit Union** is a full-stack banking web application built to deliver secure, modern, and efficient banking services. Developed with the Software Development Life Cycle (SDLC) and documented using Microsoft Visio and Project, this app showcases robust architecture and professional development practices.
 
@@ -42,17 +40,26 @@
 
 ## 🗂️ Project Documentation
 
-### 📊 Project Plan (Gantt Chart)
-<img src="./documentation/Project Plan/ProjectPlanGantt1.png" alt="Gantt Chart" width="600"/>
+### 📊 Project Plan (Gantt Chart) 
+Located in the **/documentation/Project Plan** folder.
+<img src="./documentation/Project Plan/ProjectPlanGantt1.png" alt="Gantt Chart" width="800"/>
 
-### Analysis (Requirements, Sequence Diagrams, and Use Cases)
+### 📋 Analysis
+Includes requirements, sequence diagrams, and use cases located in the **/documentation/Analysis** folder.
+<img src="./documentation/Analysis/RegistrationSequenceDiagram.png" alt="Sequence Diagram" width="600"/>
 
-### Design (Activity Diagrams, Class Diagrams, and RTM)
+### 🛠️ Design
+Covers activity diagrams, class diagrams, and the Requirements Traceability Matrix (RTM) located in the **/documentation/Design** folder.
+<img src="./documentation/Design/ATMLocatorActivityDiagram.png" alt="Activity Diagram" width="600"/>
 
-### Testing (Test Cases)
+### ✅ Testing
+Test cases for verifying system functionality are included in the **/documentation/Testing** folder.
 
-### Group Presentation (PowerPoint)
+### 🧑‍🏫 Group Presentation
+Final PowerPoint presentation available in the **/documentation/Group Presentation** folder.
 
+### 📂 Full Documentation
+You can explore all diagrams, documents, and files in the **/documentation** folder of this repository.
 
 ---
 
