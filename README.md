@@ -43,6 +43,7 @@
 ## 🗂️ Project Documentation
 
 ### 📊 Project Plan (Gantt Chart)
+<img src="./documentation/Project Plan/ProjectPlanGantt1.png" alt="Gantt Chart" width="600"/>
 
 ### Analysis (Requirements, Sequence Diagrams, and Use Cases)
 
