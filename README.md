@@ -1,5 +1,7 @@
 # 🏦 Wildcat Credit Union Banking Web Application
 
+<img src="./client/public/wcu.png" alt="WCU Logo" width="300"/>
+
 ## 📄 Overview
 **Wildcat Credit Union** is a full-stack banking web application built to deliver secure, modern, and efficient banking services. Developed with the Software Development Life Cycle (SDLC) and documented using Microsoft Visio and Project, this app showcases robust architecture and professional development practices.
 
@@ -35,6 +37,21 @@
 
 ### 🐳 Docker Containerization
 - Entire application runs in isolated containers for consistent deployment and local development.
+
+---
+
+## 🗂️ Project Documentation
+
+### 📊 Project Plan (Gantt Chart)
+
+### Analysis (Requirements, Sequence Diagrams, and Use Cases)
+
+### Design (Activity Diagrams, Class Diagrams, and RTM)
+
+### Testing (Test Cases)
+
+### Group Presentation (PowerPoint)
+
 
 ---
 
@@ -83,7 +100,7 @@ make clean
 
 ---
 
-## 📱Usage Guide
+## 📱 Usage Guide
 ### 1. Register: Create a secure user account.
 
 ### 2. Login: Log in with your credentials.
@@ -100,7 +117,7 @@ make clean
 
 ---
 
-## 👨‍💻Developers
+## 👨‍💻 Developers
 
 - Alex Ryse
 
