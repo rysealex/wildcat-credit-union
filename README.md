@@ -78,16 +78,22 @@ cd wildcat-credit-union
 ### 2. Configure Environment Variables
 Create a .env file in both the client/ and server/ directories:
 - client/.env
+
+For the Google Maps API, you will need to obtain a free API key from the Google Cloud Console.
+Follow their instructions to enable the Maps JavaScript API and generate your key.
 ```bash
-REACT_APP_Maps_API_KEY=AIzaSyCMT1qgGGU593rZLwtJtPDEMYOoYmib82Q
+REACT_APP_Maps_API_KEY=your_api_key_here
 REACT_APP_Maps_MAP_ID=fd06dc25e21bc77e58abb98f
 ```
 - server/.env
+
+For the database, you'll need to configure the connection details for your MySQL instance. 
+If you are running MySQL locally or via Docker, MYSQL_HOST will likely be localhost or the name of your database service within Docker Compose (e.g., db).
 ```bash
-MYSQL_HOST=db    
-MYSQL_USER=root
-MYSQL_PASSWORD=rootpass
-MYSQL_DATABASE=wcu_db
+MYSQL_HOST=localhost # Or your database service name if using Docker Compose (e.g., 'db')
+MYSQL_USER=root # Or your preferred MySQL username
+MYSQL_PASSWORD=your_mysql_root_password
+MYSQL_DATABASE=wildcat_credit_union_db # Or your preferred database name
 ```
 ### 3. Run the Application
 Ensure Docker Desktop is running, then from the root project directory:
